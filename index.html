@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rakesh Kumar Sahu | PhD Scholar, IIT Hyderabad</title>
+    <style>
+        :root {
+            --primary-color: #800000; /* Academic Maroon Header */
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --link-color: #0066cc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        header h1 { margin: 0; font-size: 2.2rem; }
+        header p { margin: 5px 0 0; font-size: 1.1rem; opacity: 0.9; }
+
+        nav {
+            background: #5a0000;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover { background: #330000; }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .section-card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+
+        ul { padding-left: 20px; }
+        li { margin-bottom: 8px; }
+        a { color: var(--link-color); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        footer {
+            background-color: #e0e0e0;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Rakesh Kumar Sahu</h1>
+        <p>Ph.D. Scholar | Department of Mechanical & Aerospace Engineering</p>
+        <p>Indian Institute of Technology Hyderabad</p>
+    </header>
+
+    <nav>
+        <a href="#bio">Bio</a>
+        <a href="#education">Education</a>
+        <a href="#research">Research</a>
+        <a href="#publications">Publications</a>
+        <a href="#software">Software</a>
+        <a href="#workshops">Workshops</a>
+        <a href="#internships">Internships</a>
+        <a href="#gallery">Gallery</a>
+    </nav>
+
+    <div class="container">
+        <!-- Bio Section -->
+        <section id="bio" class="section-card">
+            <h2>Bio & Overview</h2>
+            <div id="bio-content">Loading...</div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="section-card">
+            <h2>Education</h2>
+            <div id="education-content">Loading...</div>
+        </section>
+
+        <!-- Research Section -->
+        <section id="research" class="section-card">
+            <h2>Areas of Research</h2>
+            <div id="research-content">Loading...</div>
+        </section>
+
+        <!-- Publications Section -->
+        <section id="publications" class="section-card">
+            <h2>Publications</h2>
+            <div id="publications-content">Loading...</div>
+        </section>
+
+        <!-- Software Section -->
+        <section id="software" class="section-card">
+            <h2>Software & Tools</h2>
+            <div id="software-content">Loading...</div>
+        </section>
+
+        <!-- Workshops Section -->
+        <section id="workshops" class="section-card">
+            <h2>Workshops & Webinars</h2>
+            <div id="workshops-content">Loading...</div>
+        </section>
+
+        <!-- Internships Section -->
+        <section id="internships" class="section-card">
+            <h2>Internships</h2>
+            <div id="internships-content">Loading...</div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="section-card">
+            <h2>Gallery</h2>
+            <div id="gallery-content">Loading...</div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; Rakesh Kumar Sahu | Micro-Mechanics Lab, IIT Hyderabad</p>
+        <p>Contact: me25resch11009@iith.ac.in | +91-9098677266</p>
+    </footer>
+
+    <script>
+        // PASTE YOUR GOOGLE SHEET ID HERE
+        const SHEET_ID = 'https://docs.google.com/spreadsheets/d/1JSNyk2l4I5wSZS3qEJ7ixvs_56b1aJs7/edit?gid=1299279356#gid=1299279356';
+
+        // Helper function to fetch data from a specific tab by name
+        async function fetchTabData(tabName) {
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
+                const response = await fetch(url);
+                const text = await response.text();
+                const jsonText = text.substring(47, text.length - 2);
+                const data = JSON.parse(jsonText);
+                return data.table.rows;
+            } catch (err) {
+                console.error(`Error loading tab: ${tabName}`, err);
+                return [];
+            }
+        }
+
+        // Render functions for each section
+        async function loadPortfolio() {
+            // Bio
+            const bioRows = await fetchTabData('Bio');
+            let bioHTML = '';
+            bioRows.forEach(row => {
+                const field = row.c[0] ? row.c[0].v : '';
+                const val = row.c[1] ? row.c[1].v : '';
+                if(field && val) {
+                    bioHTML += `<p><strong>${field}:</strong> ${val}</p>`;
+                }
+            });
+            document.getElementById('bio-content').innerHTML = bioHTML || 'No data found.';
+
+            // Education
+            const eduRows = await fetchTabData('Education');
+            let eduHTML = '<ul>';
+            eduRows.forEach(row => {
+                const degree = row.c[0] ? row.c[0].v : '';
+                const dept = row.c[1] ? row.c[1].v : '';
+                const inst = row.c[2] ? row.c[2].v : '';
+                const year = row.c[3] ? row.c[3].v : '';
+                const advisor = row.c[4] ? row.c[4].v : '';
+                if(degree) {
+                    eduHTML += `<li><strong>${degree}</strong> (${year}) - ${dept}, ${inst} <br><small>Advisor: ${advisor}</small></li>`;
+                }
+            });
+            document.getElementById('education-content').innerHTML = eduHTML + '</ul>';
+
+            // Publications
+            const pubRows = await fetchTabData('Publications');
+            let pubHTML = '<ul>';
+            pubRows.forEach(row => {
+                const type = row.c[0] ? row.c[0].v : '';
+                const title = row.c[1] ? row.c[1].v : '';
+                const authors = row.c[2] ? row.c[2].v : '';
+                const venue = row.c[3] ? row.c[3].v : '';
+                const doi = row.c[6] ? row.c[6].v : '';
+                if(title) {
+                    pubHTML += `<li>[${type}] <strong>${title}</strong><br>${authors} - <em>${venue}</em> ${doi !== '-' ? `<br><a href="${doi}" target="_blank">${doi}</a>` : ''}</li>`;
+                }
+            });
+            document.getElementById('publications-content').innerHTML = pubHTML + '</ul>';
+
+            // Gallery
+            const galRows = await fetchTabData('Gallery');
+            let galHTML = '<div class="gallery-grid">';
+            galRows.forEach(row => {
+                const eventName = row.c[0] ? row.c[0].v : '';
+                const imgUrl = row.c[1] ? row.c[1].v : '';
+                if(imgUrl && imgUrl.startsWith('http')) {
+                    galHTML += `<div class="gallery-item"><img src="${imgUrl}" alt="${eventName}"><p><small>${eventName}</small></p></div>`;
+                }
+            });
+            document.getElementById('gallery-content').innerHTML = galHTML + '</div>';
+        }
+
+        loadPortfolio();
+    </script>
+</body>
+</html>
