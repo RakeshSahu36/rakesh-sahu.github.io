@@ -183,7 +183,7 @@
         // Helper function to fetch data from a specific tab by name
         async function fetchTabData(tabName) {
             try {
-                const url = `https://docs.google.com/spreadsheets/d/1zSi_kO_n_8hoX1__3CHjLew_cd2R7E14w-VTpMscnkY/edit?usp=sharing`;
+                const url = `https://docs.google.com/spreadsheets/d/1zSi_kO_n_8hoX1__3CHjLew_cd2R7E14w-VTpMscnkY/edit?gid=1299279356#gid=1299279356`;
                 const response = await fetch(url);
                 const text = await response.text();
                 const jsonText = text.substring(47, text.length - 2);
