@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rakesh Kumar Sahu | PhD Scholar, IIT Hyderabad</title>
-    <!-- FontAwesome for Icons -->
+    <!-- FontAwesome & Academicons for Professional Research Logos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Academicons for Research Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
     <style>
         :root {
-            --primary-color: #800000;
+            --primary-color: #800000; /* Academic Maroon */
             --primary-hover: #5a0000;
             --bg-color: #f4f6f9;
             --card-bg: #ffffff;
@@ -31,12 +30,12 @@
         header {
             background-color: var(--primary-color);
             color: white;
-            padding: 35px 20px 25px;
+            padding: 40px 20px 25px;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        header h1 { margin: 0; font-size: 2.3rem; font-weight: 700; }
+        header h1 { margin: 0; font-size: 2.3rem; font-weight: 700; letter-spacing: 0.5px; }
         header p { margin: 6px 0 0; font-size: 1.05rem; opacity: 0.95; }
 
         .social-links-header {
@@ -82,16 +81,16 @@
             background: none;
             border: none;
             color: rgba(255, 255, 255, 0.9);
-            padding: 13px 16px;
+            padding: 14px 20px;
             font-weight: 600;
-            font-size: 0.88rem;
+            font-size: 0.92rem;
             cursor: pointer;
             transition: all 0.2s;
             font-family: inherit;
         }
 
         nav button:hover {
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, 0.2);
             color: #ffffff;
         }
 
@@ -102,8 +101,8 @@
         }
 
         .container {
-            max-width: 1020px;
-            margin: 30px auto;
+            max-width: 1000px;
+            margin: 35px auto;
             padding: 0 20px;
             min-height: 500px;
         }
@@ -128,7 +127,6 @@
             font-size: 1.5rem;
         }
 
-        /* Bio Section */
         .bio-wrapper {
             display: flex;
             flex-wrap: wrap;
@@ -188,7 +186,6 @@
             border-color: var(--primary-color);
         }
 
-        /* Education Card Layout */
         .education-container {
             display: flex;
             flex-direction: column;
@@ -227,7 +224,6 @@
             font-size: 0.95rem;
         }
 
-        /* Publications */
         .pub-list {
             list-style: none;
             padding: 0;
@@ -268,7 +264,6 @@
             font-size: 0.88rem;
         }
 
-        /* Gallery Grid */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -298,11 +293,6 @@
             color: #475569;
         }
 
-        ul { padding-left: 20px; }
-        li { margin-bottom: 8px; }
-        a { color: var(--link-color); text-decoration: none; }
-        a:hover { text-decoration: underline; }
-
         footer {
             background-color: #1e293b;
             color: #94a3b8;
@@ -323,11 +313,11 @@
         <p>Indian Institute of Technology Hyderabad</p>
 
         <div class="social-links-header">
-            <a id="hdr-linkedin" href="https://linkedin.com/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-            <a id="hdr-researchgate" href="https://researchgate.net/" target="_blank" title="ResearchGate"><i class="ai ai-researchgate"></i></a>
-            <a id="hdr-orcid" href="https://orcid.org/" target="_blank" title="ORCID"><i class="ai ai-orcid"></i></a>
-            <a id="hdr-scholar" href="https://scholar.google.com/" target="_blank" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
-            <a id="hdr-scopus" href="https://scopus.com/" target="_blank" title="Scopus"><i class="ai ai-scopus"></i></a>
+            <a href="https://linkedin.com/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://researchgate.net/" target="_blank" title="ResearchGate"><i class="ai ai-researchgate"></i></a>
+            <a href="https://orcid.org/" target="_blank" title="ORCID"><i class="ai ai-orcid"></i></a>
+            <a href="https://scholar.google.com/" target="_blank" title="Google Scholar"><i class="ai ai-google-scholar"></i></a>
+            <a href="https://scopus.com/" target="_blank" title="Scopus"><i class="ai ai-scopus"></i></a>
         </div>
     </header>
 
@@ -339,9 +329,7 @@
         <button class="nav-btn" onclick="openTab('software', this)">Software</button>
         <button class="nav-btn" onclick="openTab('workshops', this)">Workshops</button>
         <button class="nav-btn" onclick="openTab('internships', this)">Internships</button>
-        <button class="nav-btn" onclick="openTab('teaching', this)">Teaching & Service</button>
         <button class="nav-btn" onclick="openTab('gallery', this)">Gallery</button>
-        <button class="nav-btn" onclick="openTab('hobbies', this)">Activities & Hobbies</button>
     </nav>
 
     <div class="container">
@@ -350,18 +338,18 @@
             <h2>Bio & Overview</h2>
             <div class="bio-wrapper">
                 <div class="profile-card">
-                    <img id="profile-pic" src="https://upload.wikimedia.org/wikipedia/en/1/19/IIT_Hyderabad_Insignia.svg" alt="Rakesh Kumar Sahu">
+                    <img id="profile-pic" src="https://via.placeholder.com/220x250?text=Rakesh+Kumar+Sahu" alt="Rakesh Kumar Sahu">
                 </div>
                 <div class="bio-details" id="bio-content">
                     Loading overview...
                 </div>
             </div>
             <div class="bio-social-buttons">
-                <a id="btn-linkedin" href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                <a id="btn-researchgate" href="https://researchgate.net/" target="_blank"><i class="ai ai-researchgate"></i> ResearchGate</a>
-                <a id="btn-orcid" href="https://orcid.org/" target="_blank"><i class="ai ai-orcid"></i> ORCID</a>
-                <a id="btn-scholar" href="https://scholar.google.com/" target="_blank"><i class="ai ai-google-scholar"></i> Google Scholar</a>
-                <a id="btn-scopus" href="https://scopus.com/" target="_blank"><i class="ai ai-scopus"></i> Scopus</a>
+                <a href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="https://researchgate.net/" target="_blank"><i class="ai ai-researchgate"></i> ResearchGate</a>
+                <a href="https://orcid.org/" target="_blank"><i class="ai ai-orcid"></i> ORCID</a>
+                <a href="https://scholar.google.com/" target="_blank"><i class="ai ai-google-scholar"></i> Google Scholar</a>
+                <a href="https://scopus.com/" target="_blank"><i class="ai ai-scopus"></i> Scopus</a>
             </div>
         </section>
 
@@ -401,22 +389,10 @@
             <div id="internships-content">Loading internships...</div>
         </section>
 
-        <!-- Teaching & Service Section -->
-        <section id="teaching" class="tab-content section-card">
-            <h2>Teaching & Service</h2>
-            <div id="teaching-content">Loading teaching & service...</div>
-        </section>
-
         <!-- Gallery Section -->
         <section id="gallery" class="tab-content section-card">
             <h2>Gallery</h2>
             <div id="gallery-content">Loading gallery...</div>
-        </section>
-
-        <!-- Activities & Hobbies Section -->
-        <section id="hobbies" class="tab-content section-card">
-            <h2>Activities & Hobbies</h2>
-            <div id="hobbies-content">Loading activities & hobbies...</div>
         </section>
     </div>
 
@@ -426,21 +402,8 @@
     </footer>
 
     <script>
-        // TARGET SPREADSHEET ID:
+        // UPDATED SHEET ID matches your active Google Sheet:
         const SHEET_ID = '1zSi_kO_n_8hoX1__3CHjLew_cd2R7E14w-VTpMscnkY';
-
-        // Convert Google Drive view links into direct embed CDN URLs
-        function formatImageUrl(url) {
-            if (!url) return '';
-            url = url.trim();
-            if (url.includes('drive.google.com')) {
-                const match = url.match(/\/d\/([^\/\?]+)/);
-                if (match && match[1]) {
-                    return `https://lh3.googleusercontent.com/d/${match[1]}`;
-                }
-            }
-            return url;
-        }
 
         function openTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -450,8 +413,7 @@
         }
 
         function parseCSV(text) {
-            const lines = text.split('
-');
+            const lines = text.split('\n');
             return lines.map(line => {
                 const values = [];
                 let current = '';
@@ -479,55 +441,35 @@
             try {
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
                 const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                if (!response.ok) throw new Error('Network error');
                 const text = await response.text();
                 return parseCSV(text);
             } catch (err) {
-                console.error(`Error loading tab "${tabName}":`, err);
+                console.error(`Error loading tab ${tabName}:`, err);
                 return [];
             }
         }
 
         async function loadPortfolio() {
-            // 1. Bio
+            // Bio
             const bioRows = await fetchTabData('Bio');
             if (bioRows.length > 0) {
                 let bioHTML = '';
                 bioRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('field')) return;
-                    const field = (row[0] || '').trim();
-                    const val = (row[1] || '').trim();
-
-                    if (!field || !val) return;
-
-                    const fieldLower = field.toLowerCase();
-                    if (fieldLower.includes('profile') || fieldLower.includes('photo') || fieldLower.includes('image')) {
-                        if (val.startsWith('http')) {
-                            document.getElementById('profile-pic').src = formatImageUrl(val);
-                        }
-                    } else if (fieldLower.includes('linkedin')) {
-                        document.getElementById('hdr-linkedin').href = val;
-                        document.getElementById('btn-linkedin').href = val;
-                    } else if (fieldLower.includes('researchgate')) {
-                        document.getElementById('hdr-researchgate').href = val;
-                        document.getElementById('btn-researchgate').href = val;
-                    } else if (fieldLower.includes('orcid')) {
-                        document.getElementById('hdr-orcid').href = val;
-                        document.getElementById('btn-orcid').href = val;
-                    } else if (fieldLower.includes('scholar')) {
-                        document.getElementById('hdr-scholar').href = val;
-                        document.getElementById('btn-scholar').href = val;
-                    } else if (fieldLower.includes('scopus')) {
-                        document.getElementById('hdr-scopus').href = val;
-                        document.getElementById('btn-scopus').href = val;
-                    } else {
+                    const field = row[0] || '';
+                    const val = row[1] || '';
+                    
+                    if (field.toLowerCase().includes('profile') || field.toLowerCase().includes('image') || field.toLowerCase().includes('photo')) {
+                        if (val.startsWith('http')) document.getElementById('profile-pic').src = val;
+                    } else if (field && val && !field.toLowerCase().includes('url')) {
                         bioHTML += `<p><strong>${field}:</strong> ${val}</p>`;
                     }
                 });
                 document.getElementById('bio-content').innerHTML = bioHTML || 'No bio details found.';
             }
 
-            // 2. Education
+            // Education Cards with Logos
             const eduRows = await fetchTabData('Education');
             if (eduRows.length > 0) {
                 let eduHTML = '';
@@ -544,9 +486,8 @@
                     const degree = row[0] || '';
                     const dept = row[1] || '';
                     const inst = row[2] || '';
-                    const duration = row[3] || '';
+                    const year = row[3] || '';
                     const advisor = row[4] || '';
-                    const thesis = row[5] || '';
 
                     if (degree) {
                         let logoUrl = 'https://via.placeholder.com/65?text=Institute';
@@ -559,11 +500,10 @@
                             <div class="education-card">
                                 <img src="${logoUrl}" alt="${inst}" class="education-logo" onerror="this.src='https://via.placeholder.com/65?text=College'">
                                 <div class="education-details">
-                                    <h3>${degree} (${duration})</h3>
-                                    <p><strong>Department / Specialization:</strong> ${dept}</p>
+                                    <h3>${degree} (${year})</h3>
+                                    <p><strong>Department/Specialization:</strong> ${dept}</p>
                                     <p><strong>Institution:</strong> ${inst}</p>
                                     ${advisor && advisor !== '-' ? `<p style="color:#64748b; font-size:0.88rem;"><strong>Advisor:</strong> ${advisor}</p>` : ''}
-                                    ${thesis && thesis !== '-' ? `<p style="color:#64748b; font-size:0.88rem;"><strong>Thesis / Project:</strong> ${thesis}</p>` : ''}
                                 </div>
                             </div>
                         `;
@@ -572,7 +512,7 @@
                 document.getElementById('education-content').innerHTML = eduHTML;
             }
 
-            // 3. Research
+            // Research
             const resRows = await fetchTabData('Research');
             if (resRows.length > 0) {
                 let resHTML = '<ul>';
@@ -588,7 +528,7 @@
                 document.getElementById('research-content').innerHTML = resHTML + '</ul>';
             }
 
-            // 4. Publications
+            // Publications
             const pubRows = await fetchTabData('Publications');
             if (pubRows.length > 0) {
                 let pubHTML = '<ul class="pub-list">';
@@ -597,16 +537,14 @@
                     const type = row[0] || 'Journal';
                     const title = row[1] || '';
                     const authors = row[2] || '';
-                    const journal = row[3] || '';
-                    const venue = row[4] || '';
-                    const year = row[5] || '';
+                    const venue = row[3] || '';
                     const doi = row[6] || '';
                     if (title) {
                         pubHTML += `
                             <li class="pub-item">
                                 <span class="pub-badge">${type}</span>
                                 <span class="pub-title">${title}</span>
-                                <div class="pub-authors">${authors} - <em>${journal}</em> ${venue && venue !== '-' ? `(${venue})` : ''} [${year}]</div>
+                                <div class="pub-authors">${authors} - <em>${venue}</em></div>
                                 ${doi && doi !== '-' ? `<div class="pub-doi"><a href="${doi}" target="_blank"><i class="fas fa-external-link-alt"></i> View Article/DOI</a></div>` : ''}
                             </li>
                         `;
@@ -615,7 +553,7 @@
                 document.getElementById('publications-content').innerHTML = pubHTML + '</ul>';
             }
 
-            // 5. Software
+            // Software
             const softRows = await fetchTabData('Software');
             if (softRows.length > 0) {
                 let softHTML = '<ul>';
@@ -631,7 +569,7 @@
                 document.getElementById('software-content').innerHTML = softHTML + '</ul>';
             }
 
-            // 6. Workshops & Webinars
+            // Workshops & Webinars
             const workRows = await fetchTabData('Workshops & Webinars');
             if (workRows.length > 0) {
                 let workHTML = '<ul>';
@@ -648,7 +586,7 @@
                 document.getElementById('workshops-content').innerHTML = workHTML + '</ul>';
             }
 
-            // 7. Internships
+            // Internships
             const intRows = await fetchTabData('Internships');
             if (intRows.length > 0) {
                 let intHTML = '<ul>';
@@ -664,33 +602,15 @@
                 document.getElementById('internships-content').innerHTML = intHTML + '</ul>';
             }
 
-            // 8. Teaching & Service
-            const teachRows = await fetchTabData('Teaching & Service');
-            if (teachRows.length > 0) {
-                let teachHTML = '<ul>';
-                teachRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    const cat = row[0] || '';
-                    const role = row[1] || '';
-                    const inst = row[2] || '';
-                    const details = row[3] || '';
-                    if (role) {
-                        teachHTML += `<li><strong>${role}</strong> (${cat}) - ${inst} <br><small>${details}</small></li>`;
-                    }
-                });
-                document.getElementById('teaching-content').innerHTML = teachHTML + '</ul>';
-            }
-
-            // 9. Gallery
+            // Gallery
             const galRows = await fetchTabData('Gallery');
             if (galRows.length > 0) {
                 let galHTML = '<div class="gallery-grid">';
                 galRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('event')) return;
                     const eventName = row[0] || '';
-                    const rawUrl = row[1] || '';
-                    const imgUrl = formatImageUrl(rawUrl);
-                    if (imgUrl) {
+                    const imgUrl = row[1] || '';
+                    if (imgUrl && String(imgUrl).startsWith('http')) {
                         galHTML += `
                             <div class="gallery-card">
                                 <img src="${imgUrl}" alt="${eventName}" onerror="this.src='https://via.placeholder.com/220x160?text=Event+Photo'">
@@ -700,22 +620,6 @@
                     }
                 });
                 document.getElementById('gallery-content').innerHTML = galHTML + '</div>';
-            }
-
-            // 10. Activities & Hobbies
-            const hobbyRows = await fetchTabData('Activities & Hobbies');
-            if (hobbyRows.length > 0) {
-                let hobbyHTML = '<ul>';
-                hobbyRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    const cat = row[0] || '';
-                    const name = row[1] || '';
-                    const desc = row[2] || '';
-                    if (name) {
-                        hobbyHTML += `<li><strong>${name}</strong> (${cat})<br>${desc}</li>`;
-                    }
-                });
-                document.getElementById('hobbies-content').innerHTML = hobbyHTML + '</ul>';
             }
         }
 
