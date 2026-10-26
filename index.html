@@ -6,7 +6,7 @@
     <title>Rakesh Kumar Sahu | PhD Scholar, IIT Hyderabad</title>
     <style>
         :root {
-            --primary-color: #800000; /* Academic Maroon Header */
+            --primary-color: #800000;
             --bg-color: #f9f9f9;
             --card-bg: #ffffff;
             --text-color: #333333;
@@ -25,12 +25,12 @@
         header {
             background-color: var(--primary-color);
             color: white;
-            padding: 30px 20px;
+            padding: 35px 20px;
             text-align: center;
         }
 
-        header h1 { margin: 0; font-size: 2.2rem; }
-        header p { margin: 5px 0 0; font-size: 1.1rem; opacity: 0.9; }
+        header h1 { margin: 0; font-size: 2.4rem; }
+        header p { margin: 6px 0 0; font-size: 1.1rem; opacity: 0.95; }
 
         nav {
             background: #5a0000;
@@ -74,7 +74,7 @@
         }
 
         ul { padding-left: 20px; }
-        li { margin-bottom: 8px; }
+        li { margin-bottom: 10px; }
         a { color: var(--link-color); text-decoration: none; }
         a:hover { text-decoration: underline; }
 
@@ -83,6 +83,13 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 15px;
+        }
+
+        .gallery-item {
+            text-align: center;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 6px;
         }
 
         .gallery-item img {
@@ -122,49 +129,41 @@
     </nav>
 
     <div class="container">
-        <!-- Bio Section -->
         <section id="bio" class="section-card">
             <h2>Bio & Overview</h2>
             <div id="bio-content">Loading...</div>
         </section>
 
-        <!-- Education Section -->
         <section id="education" class="section-card">
             <h2>Education</h2>
             <div id="education-content">Loading...</div>
         </section>
 
-        <!-- Research Section -->
         <section id="research" class="section-card">
             <h2>Areas of Research</h2>
             <div id="research-content">Loading...</div>
         </section>
 
-        <!-- Publications Section -->
         <section id="publications" class="section-card">
             <h2>Publications</h2>
             <div id="publications-content">Loading...</div>
         </section>
 
-        <!-- Software Section -->
         <section id="software" class="section-card">
             <h2>Software & Tools</h2>
             <div id="software-content">Loading...</div>
         </section>
 
-        <!-- Workshops Section -->
         <section id="workshops" class="section-card">
             <h2>Workshops & Webinars</h2>
             <div id="workshops-content">Loading...</div>
         </section>
 
-        <!-- Internships Section -->
         <section id="internships" class="section-card">
             <h2>Internships</h2>
             <div id="internships-content">Loading...</div>
         </section>
 
-        <!-- Gallery Section -->
         <section id="gallery" class="section-card">
             <h2>Gallery</h2>
             <div id="gallery-content">Loading...</div>
@@ -177,143 +176,183 @@
     </footer>
 
     <script>
-        // CLEAN SHEET ID
         const SHEET_ID = '1JSNyk2l4I5wSZS3qEJ7ixvs_56b1aJs7';
 
-        // Helper function to fetch data from a specific tab by name
+        // Parse CSV string into array of rows
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            return lines.map(line => {
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"' && line[i+1] === '"') {
+                        current += '"';
+                        i++;
+                    } else if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current.trim());
+                return values;
+            }).filter(row => row.some(cell => cell.length > 0));
+        }
+
         async function fetchTabData(tabName) {
             try {
-                // FIXED: API URL for JSON output by sheet tab name
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
+                // Direct CSV Export Endpoint
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
                 const response = await fetch(url);
+                if (!response.ok) throw new Error('Network error');
                 const text = await response.text();
-                
-                // Extract JSON object safely
-                const jsonText = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
-                const data = JSON.parse(jsonText);
-                return (data.table && data.table.rows) ? data.table.rows : [];
+                const rows = parseCSV(text);
+                // Skip header row if present
+                return rows.length > 0 ? rows : [];
             } catch (err) {
                 console.error(`Error loading tab: ${tabName}`, err);
                 return [];
             }
         }
 
-        // Render functions for each section
         async function loadPortfolio() {
             // Bio
             const bioRows = await fetchTabData('Bio');
-            let bioHTML = '';
-            bioRows.forEach(row => {
-                if(!row.c) return;
-                const field = row.c[0] ? row.c[0].v : '';
-                const val = row.c[1] ? row.c[1].v : '';
-                if(field && val) {
-                    bioHTML += `<p><strong>${field}:</strong> ${val}</p>`;
-                }
-            });
-            document.getElementById('bio-content').innerHTML = bioHTML || 'No data found in Bio tab.';
+            if (bioRows.length > 0) {
+                let bioHTML = '';
+                bioRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('field')) return; // skip header
+                    const field = row[0] || '';
+                    const val = row[1] || '';
+                    if (field && val) {
+                        bioHTML += `<p><strong>${field}:</strong> ${val}</p>`;
+                    }
+                });
+                document.getElementById('bio-content').innerHTML = bioHTML || 'No data in Bio tab.';
+            } else {
+                document.getElementById('bio-content').innerHTML = 'Unable to fetch Bio tab.';
+            }
 
             // Education
             const eduRows = await fetchTabData('Education');
-            let eduHTML = '<ul>';
-            eduRows.forEach(row => {
-                if(!row.c) return;
-                const degree = row.c[0] ? row.c[0].v : '';
-                const dept = row.c[1] ? row.c[1].v : '';
-                const inst = row.c[2] ? row.c[2].v : '';
-                const year = row.c[3] ? row.c[3].v : '';
-                const advisor = row.c[4] ? row.c[4].v : '';
-                if(degree) {
-                    eduHTML += `<li><strong>${degree}</strong> (${year}) - ${dept}, ${inst} <br><small>Advisor: ${advisor}</small></li>`;
-                }
-            });
-            document.getElementById('education-content').innerHTML = (eduHTML !== '<ul>' ? eduHTML + '</ul>' : 'No data found in Education tab.');
+            if (eduRows.length > 0) {
+                let eduHTML = '<ul>';
+                eduRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('degree')) return;
+                    const degree = row[0] || '';
+                    const dept = row[1] || '';
+                    const inst = row[2] || '';
+                    const year = row[3] || '';
+                    const advisor = row[4] || '';
+                    if (degree) {
+                        eduHTML += `<li><strong>${degree}</strong> (${year}) - ${dept}, ${inst} <br><small>Advisor: ${advisor}</small></li>`;
+                    }
+                });
+                document.getElementById('education-content').innerHTML = eduHTML !== '<ul>' ? eduHTML + '</ul>' : 'No data in Education tab.';
+            }
 
             // Research
             const resRows = await fetchTabData('Research');
-            let resHTML = '<ul>';
-            resRows.forEach(row => {
-                if(!row.c) return;
-                const cat = row.c[0] ? row.c[0].v : '';
-                const area = row.c[1] ? row.c[1].v : '';
-                const desc = row.c[2] ? row.c[2].v : '';
-                if(area) {
-                    resHTML += `<li><strong>${area}</strong> (${cat})<br>${desc}</li>`;
-                }
-            });
-            document.getElementById('research-content').innerHTML = (resHTML !== '<ul>' ? resHTML + '</ul>' : 'No data found in Research tab.');
+            if (resRows.length > 0) {
+                let resHTML = '<ul>';
+                resRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
+                    const cat = row[0] || '';
+                    const area = row[1] || '';
+                    const desc = row[2] || '';
+                    if (area) {
+                        resHTML += `<li><strong>${area}</strong> (${cat})<br>${desc}</li>`;
+                    }
+                });
+                document.getElementById('research-content').innerHTML = resHTML !== '<ul>' ? resHTML + '</ul>' : 'No data in Research tab.';
+            }
 
             // Publications
             const pubRows = await fetchTabData('Publications');
-            let pubHTML = '<ul>';
-            pubRows.forEach(row => {
-                if(!row.c) return;
-                const type = row.c[0] ? row.c[0].v : '';
-                const title = row.c[1] ? row.c[1].v : '';
-                const authors = row.c[2] ? row.c[2].v : '';
-                const venue = row.c[3] ? row.c[3].v : '';
-                const doi = row.c[6] ? row.c[6].v : '';
-                if(title) {
-                    pubHTML += `<li>[${type}] <strong>${title}</strong><br>${authors} - <em>${venue}</em> ${doi && doi !== '-' ? `<br><a href="${doi}" target="_blank">${doi}</a>` : ''}</li>`;
-                }
-            });
-            document.getElementById('publications-content').innerHTML = (pubHTML !== '<ul>' ? pubHTML + '</ul>' : 'No data found in Publications tab.');
+            if (pubRows.length > 0) {
+                let pubHTML = '<ul>';
+                pubRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
+                    const type = row[0] || '';
+                    const title = row[1] || '';
+                    const authors = row[2] || '';
+                    const venue = row[3] || '';
+                    const doi = row[6] || '';
+                    if (title) {
+                        pubHTML += `<li>[${type}] <strong>${title}</strong><br>${authors} - <em>${venue}</em> ${doi && doi !== '-' ? `<br><a href="${doi}" target="_blank">${doi}</a>` : ''}</li>`;
+                    }
+                });
+                document.getElementById('publications-content').innerHTML = pubHTML !== '<ul>' ? pubHTML + '</ul>' : 'No data in Publications tab.';
+            }
 
             // Software
             const softRows = await fetchTabData('Software');
-            let softHTML = '<ul>';
-            softRows.forEach(row => {
-                if(!row.c) return;
-                const name = row.c[0] ? row.c[0].v : '';
-                const cat = row.c[1] ? row.c[1].v : '';
-                const usage = row.c[2] ? row.c[2].v : '';
-                if(name) {
-                    softHTML += `<li><strong>${name}</strong> (${cat}): ${usage}</li>`;
-                }
-            });
-            document.getElementById('software-content').innerHTML = (softHTML !== '<ul>' ? softHTML + '</ul>' : 'No data found in Software tab.');
+            if (softRows.length > 0) {
+                let softHTML = '<ul>';
+                softRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('software')) return;
+                    const name = row[0] || '';
+                    const cat = row[1] || '';
+                    const usage = row[2] || '';
+                    if (name) {
+                        softHTML += `<li><strong>${name}</strong> (${cat}): ${usage}</li>`;
+                    }
+                });
+                document.getElementById('software-content').innerHTML = softHTML !== '<ul>' ? softHTML + '</ul>' : 'No data in Software tab.';
+            }
 
             // Workshops & Webinars
             const workRows = await fetchTabData('Workshops & Webinars');
-            let workHTML = '<ul>';
-            workRows.forEach(row => {
-                if(!row.c) return;
-                const type = row.c[0] ? row.c[0].v : '';
-                const title = row.c[1] ? row.c[1].v : '';
-                const venue = row.c[2] ? row.c[2].v : '';
-                const date = row.c[3] ? row.c[3].v : '';
-                if(title) {
-                    workHTML += `<li>[${type}] <strong>${title}</strong> - ${venue} (${date})</li>`;
-                }
-            });
-            document.getElementById('workshops-content').innerHTML = (workHTML !== '<ul>' ? workHTML + '</ul>' : 'No data found in Workshops tab.');
+            if (workRows.length > 0) {
+                let workHTML = '<ul>';
+                workRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
+                    const type = row[0] || '';
+                    const title = row[1] || '';
+                    const venue = row[2] || '';
+                    const date = row[3] || '';
+                    if (title) {
+                        workHTML += `<li>[${type}] <strong>${title}</strong> - ${venue} (${date})</li>`;
+                    }
+                });
+                document.getElementById('workshops-content').innerHTML = workHTML !== '<ul>' ? workHTML + '</ul>' : 'No data in Workshops tab.';
+            }
 
             // Internships
             const intRows = await fetchTabData('Internships');
-            let intHTML = '<ul>';
-            intRows.forEach(row => {
-                if(!row.c) return;
-                const company = row.c[0] ? row.c[0].v : '';
-                const location = row.c[1] ? row.c[1].v : '';
-                const role = row.c[2] ? row.c[2].v : '';
-                if(company) {
-                    intHTML += `<li><strong>${company}</strong> (${location}) - ${role}</li>`;
-                }
-            });
-            document.getElementById('internships-content').innerHTML = (intHTML !== '<ul>' ? intHTML + '</ul>' : 'No data found in Internships tab.');
+            if (intRows.length > 0) {
+                let intHTML = '<ul>';
+                intRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('company')) return;
+                    const company = row[0] || '';
+                    const location = row[1] || '';
+                    const role = row[2] || '';
+                    if (company) {
+                        intHTML += `<li><strong>${company}</strong> (${location}) - ${role}</li>`;
+                    }
+                });
+                document.getElementById('internships-content').innerHTML = intHTML !== '<ul>' ? intHTML + '</ul>' : 'No data in Internships tab.';
+            }
 
             // Gallery
             const galRows = await fetchTabData('Gallery');
-            let galHTML = '<div class="gallery-grid">';
-            galRows.forEach(row => {
-                if(!row.c) return;
-                const eventName = row.c[0] ? row.c[0].v : '';
-                const imgUrl = row.c[1] ? row.c[1].v : '';
-                if(imgUrl && String(imgUrl).startsWith('http')) {
-                    galHTML += `<div class="gallery-item"><img src="${imgUrl}" alt="${eventName}"><p><small>${eventName}</small></p></div>`;
-                }
-            });
-            document.getElementById('gallery-content').innerHTML = (galHTML !== '<div class="gallery-grid">' ? galHTML + '</div>' : 'No data found in Gallery tab.');
+            if (galRows.length > 0) {
+                let galHTML = '<div class="gallery-grid">';
+                galRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('event')) return;
+                    const eventName = row[0] || '';
+                    const imgUrl = row[1] || '';
+                    if (imgUrl && String(imgUrl).startsWith('http')) {
+                        galHTML += `<div class="gallery-item"><img src="${imgUrl}" alt="${eventName}"><p><small>${eventName}</small></p></div>`;
+                    }
+                });
+                document.getElementById('gallery-content').innerHTML = galHTML !== '<div class="gallery-grid">' ? galHTML + '</div>' : 'No data in Gallery tab.';
+            }
         }
 
         loadPortfolio();
