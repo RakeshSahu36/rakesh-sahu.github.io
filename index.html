@@ -42,20 +42,43 @@
             z-index: 1000;
         }
 
-        nav a {
+        nav button {
+            background: none;
+            border: none;
             color: white;
             padding: 14px 20px;
-            text-decoration: none;
             font-weight: 500;
             font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+            font-family: inherit;
         }
 
-        nav a:hover { background: #330000; }
+        nav button:hover {
+            background: #330000;
+        }
+
+        nav button.active {
+            background: #ffffff;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
 
         .container {
             max-width: 1000px;
             margin: 30px auto;
             padding: 0 20px;
+            min-height: 400px;
+        }
+
+        /* Hide sections by default */
+        .tab-content {
+            display: none;
+        }
+
+        /* Show active section */
+        .tab-content.active {
+            display: block;
         }
 
         .section-card {
@@ -118,53 +141,61 @@
     </header>
 
     <nav>
-        <a href="#bio">Bio</a>
-        <a href="#education">Education</a>
-        <a href="#research">Research</a>
-        <a href="#publications">Publications</a>
-        <a href="#software">Software</a>
-        <a href="#workshops">Workshops</a>
-        <a href="#internships">Internships</a>
-        <a href="#gallery">Gallery</a>
+        <button class="nav-btn active" onclick="openTab('bio', this)">Bio</button>
+        <button class="nav-btn" onclick="openTab('education', this)">Education</button>
+        <button class="nav-btn" onclick="openTab('research', this)">Research</button>
+        <button class="nav-btn" onclick="openTab('publications', this)">Publications</button>
+        <button class="nav-btn" onclick="openTab('software', this)">Software</button>
+        <button class="nav-btn" onclick="openTab('workshops', this)">Workshops</button>
+        <button class="nav-btn" onclick="openTab('internships', this)">Internships</button>
+        <button class="nav-btn" onclick="openTab('gallery', this)">Gallery</button>
     </nav>
 
     <div class="container">
-        <section id="bio" class="section-card">
+        <!-- Bio Section -->
+        <section id="bio" class="tab-content active section-card">
             <h2>Bio & Overview</h2>
             <div id="bio-content">Loading...</div>
         </section>
 
-        <section id="education" class="section-card">
+        <!-- Education Section -->
+        <section id="education" class="tab-content section-card">
             <h2>Education</h2>
             <div id="education-content">Loading...</div>
         </section>
 
-        <section id="research" class="section-card">
+        <!-- Research Section -->
+        <section id="research" class="tab-content section-card">
             <h2>Areas of Research</h2>
             <div id="research-content">Loading...</div>
         </section>
 
-        <section id="publications" class="section-card">
+        <!-- Publications Section -->
+        <section id="publications" class="tab-content section-card">
             <h2>Publications</h2>
             <div id="publications-content">Loading...</div>
         </section>
 
-        <section id="software" class="section-card">
+        <!-- Software Section -->
+        <section id="software" class="tab-content section-card">
             <h2>Software & Tools</h2>
             <div id="software-content">Loading...</div>
         </section>
 
-        <section id="workshops" class="section-card">
+        <!-- Workshops Section -->
+        <section id="workshops" class="tab-content section-card">
             <h2>Workshops & Webinars</h2>
             <div id="workshops-content">Loading...</div>
         </section>
 
-        <section id="internships" class="section-card">
+        <!-- Internships Section -->
+        <section id="internships" class="tab-content section-card">
             <h2>Internships</h2>
             <div id="internships-content">Loading...</div>
         </section>
 
-        <section id="gallery" class="section-card">
+        <!-- Gallery Section -->
+        <section id="gallery" class="tab-content section-card">
             <h2>Gallery</h2>
             <div id="gallery-content">Loading...</div>
         </section>
@@ -178,7 +209,22 @@
     <script>
         const SHEET_ID = '1JSNyk2l4I5wSZS3qEJ7ixvs_56b1aJs7';
 
-        // Parse CSV string into array of rows
+        // Tab Switcher Function
+        function openTab(tabId, btnElement) {
+            // Hide all tab content sections
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+
+            // Remove active style from all navigation buttons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab content and set button as active
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        // CSV Parser
         function parseCSV(text) {
             const lines = text.split('\n');
             return lines.map(line => {
@@ -206,13 +252,11 @@
 
         async function fetchTabData(tabName) {
             try {
-                // Direct CSV Export Endpoint
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
                 const response = await fetch(url);
-                if (!response.ok) throw new Error('Network error');
+                if (!response.ok) throw new Error('Network response failed');
                 const text = await response.text();
                 const rows = parseCSV(text);
-                // Skip header row if present
                 return rows.length > 0 ? rows : [];
             } catch (err) {
                 console.error(`Error loading tab: ${tabName}`, err);
@@ -226,7 +270,7 @@
             if (bioRows.length > 0) {
                 let bioHTML = '';
                 bioRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('field')) return; // skip header
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('field')) return;
                     const field = row[0] || '';
                     const val = row[1] || '';
                     if (field && val) {
