@@ -143,8 +143,8 @@
         .art-subheading {
             color: var(--primary-color);
             font-size: 1.05rem;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            margin-top: 25px;
+            margin-bottom: 12px;
             font-weight: 600;
             border-left: 3px solid var(--primary-color);
             padding-left: 8px;
@@ -419,6 +419,14 @@
             font-size: 0.88rem;
         }
 
+        .pub-doi a {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--link-color);
+            font-weight: 600;
+        }
+
         /* Gallery Grid */
         .gallery-grid {
             display: grid;
@@ -438,7 +446,7 @@
 
         .gallery-card img {
             width: 100%;
-            height: 160px;
+            height: 180px;
             object-fit: cover;
         }
 
@@ -482,7 +490,6 @@
         </div>
     </header>
 
-    <!-- 7 TARGET NAV TABS AS REQUESTED -->
     <nav>
         <button class="nav-btn active" onclick="openTab('home', this)">Home</button>
         <button class="nav-btn" onclick="openTab('bio-sketch', this)">Bio-Sketch</button>
@@ -524,8 +531,11 @@
             <h3 class="sub-heading"><i class="fas fa-briefcase"></i> Internships</h3>
             <div id="internships-content">Loading internship details...</div>
 
-            <h3 class="sub-heading"><i class="fas fa-chalkboard-teacher"></i> Workshops & Webinars</h3>
-            <div id="workshops-content">Loading workshop details...</div>
+            <h3 class="sub-heading"><i class="fas fa-chalkboard-teacher"></i> Workshops</h3>
+            <div id="workshops-list-content">Loading workshop details...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-laptop"></i> Webinars</h3>
+            <div id="webinars-list-content">Loading webinar details...</div>
         </section>
 
         <!-- 3. RESEARCH TAB -->
@@ -577,13 +587,13 @@
             <h3 class="sub-heading"><i class="fas fa-heart"></i> Hobbies</h3>
             <div id="hobbies-general-content">Loading hobbies details...</div>
 
-            <div class="art-subheading"><i class="fas fa-paint-brush"></i> Watercolor</div>
+            <div class="art-subheading"><i class="fas fa-paint-brush"></i> Watercolor Painting</div>
             <div id="art-watercolor-content" class="gallery-grid">Loading watercolor artwork...</div>
 
             <div class="art-subheading"><i class="fas fa-pencil-alt"></i> Pencil Sketch</div>
             <div id="art-pencil-content" class="gallery-grid">Loading pencil sketches...</div>
 
-            <div class="art-subheading"><i class="fas fa-fill-drip"></i> Acrylic</div>
+            <div class="art-subheading"><i class="fas fa-fill-drip"></i> Acrylic Painting</div>
             <div id="art-acrylic-content" class="gallery-grid">Loading acrylic artwork...</div>
         </section>
 
@@ -613,6 +623,19 @@
                 }
             }
             return url;
+        }
+
+        function formatDoiUrl(doi) {
+            if (!doi) return '';
+            doi = doi.trim();
+            if (doi === '-' || doi === 'null') return '';
+            if (doi.startsWith('http://') || doi.startsWith('https://')) {
+                return doi;
+            }
+            if (doi.toLowerCase().startsWith('doi:')) {
+                doi = doi.substring(4).trim();
+            }
+            return `https://doi.org/${doi}`;
         }
 
         function openTab(tabId, btnElement) {
@@ -712,7 +735,7 @@
                 document.getElementById('ftr-contact').innerHTML = `Contact: ${currentEmail} | +91-${currentMobile}`;
             }
 
-            // 2. BIO-SKETCH (EDUCATION, INTERNSHIPS, WORKSHOPS)
+            // 2. BIO-SKETCH (EDUCATION, INTERNSHIPS, WORKSHOPS, WEBINARS)
             const eduRows = await fetchTabData('Education');
             if (eduRows.length > 0) {
                 let eduHTML = '';
@@ -780,20 +803,35 @@
                 document.getElementById('internships-content').innerHTML = intHTML + '</div>';
             }
 
+            // SEPARATED WORKSHOPS AND WEBINARS (WITHOUT PREFIXES)
             const workRows = await fetchTabData('Workshops & Webinars');
             if (workRows.length > 0) {
-                let workHTML = '<ul>';
+                let workshopHTML = '<ul>';
+                let webinarHTML = '<ul>';
+                let hasWorkshop = false, hasWebinar = false;
+
                 workRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
-                    const type = row[0] || '';
-                    const title = row[1] || '';
-                    const venue = row[2] || '';
-                    const date = row[3] || '';
-                    if (title) {
-                        workHTML += `<li>[${type}] <strong>${title}</strong> - ${venue} (${date})</li>`;
+                    const type = (row[0] || '').trim();
+                    const title = (row[1] || '').trim();
+                    const venue = (row[2] || '').trim();
+                    const date = (row[3] || '').trim();
+
+                    if (!title) return;
+
+                    const listItem = `<li><strong>${title}</strong> - ${venue} ${date ? `(${date})` : ''}</li>`;
+
+                    if (type.toLowerCase().includes('webinar')) {
+                        webinarHTML += listItem;
+                        hasWebinar = true;
+                    } else {
+                        workshopHTML += listItem;
+                        hasWorkshop = true;
                     }
                 });
-                document.getElementById('workshops-content').innerHTML = workHTML + '</ul>';
+
+                document.getElementById('workshops-list-content').innerHTML = hasWorkshop ? workshopHTML + '</ul>' : '<p>No workshops listed yet.</p>';
+                document.getElementById('webinars-list-content').innerHTML = hasWebinar ? webinarHTML + '</ul>' : '<p>No webinars listed yet.</p>';
             }
 
             // 3. RESEARCH (AREAS, SOFTWARE USED WITH LOGOS, HIGHLIGHTS)
@@ -886,7 +924,7 @@
                 document.getElementById('highlights-content').innerHTML = highHTML || '<p>No research highlights loaded yet.</p>';
             }
 
-            // 4. PUBLICATIONS (JOURNALS, CONFERENCES, BOOK CHAPTERS)
+            // 4. PUBLICATIONS (FIXED WORKING DOI LINKS)
             const pubRows = await fetchTabData('Publications');
             if (pubRows.length > 0) {
                 let journalsHTML = '<ul class="pub-list">';
@@ -902,7 +940,8 @@
                     const journal = row[3] || '';
                     const venue = row[4] || '';
                     const year = row[5] || '';
-                    const doi = row[6] || '';
+                    const rawDoi = row[6] || '';
+                    const formattedDoi = formatDoiUrl(rawDoi);
 
                     if (!title) return;
 
@@ -911,7 +950,7 @@
                             <span class="pub-badge">${type}</span>
                             <span class="pub-title">${title}</span>
                             <div class="pub-authors">${authors} - <em>${journal}</em> ${venue && venue !== '-' ? `(${venue})` : ''} [${year}]</div>
-                            ${doi && doi !== '-' ? `<div class="pub-doi"><a href="${doi}" target="_blank"><i class="fas fa-external-link-alt"></i> View Article/DOI</a></div>` : ''}
+                            ${formattedDoi ? `<div class="pub-doi"><a href="${formattedDoi}" target="_blank"><i class="fas fa-external-link-alt"></i> View Article/DOI</a></div>` : ''}
                         </li>
                     `;
 
@@ -964,7 +1003,7 @@
                 document.getElementById('reviewer-content').innerHTML = hasRev ? revHTML + '</ul>' : '<p>No reviewer panel memberships listed yet.</p>';
             }
 
-            // 6. ACTIVITIES (VOLUNTEER, HOBBIES, WATERCOLOR, PENCIL SKETCH, ACRYLIC)
+            // 6. ACTIVITIES & HOBBIES (PARSE ARTWORK IMAGES CORRECTLY)
             const hobbyRows = await fetchTabData('Activities & Hobbies');
             if (hobbyRows.length > 0) {
                 let volHTML = '<ul>';
@@ -975,33 +1014,43 @@
                 hobbyRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
                     const cat = (row[0] || '').trim();
-                    const title = row[1] || '';
-                    const desc = row[2] || '';
-                    const imgUrl = formatImageUrl(row[3] || '');
+                    const title = (row[1] || '').trim();
+                    const desc = (row[2] || '').trim();
+                    
+                    // Check column 4 or column 3 for Image URL
+                    let rawImg = row[3] || row[2] || '';
+                    let imgUrl = formatImageUrl(rawImg);
 
-                    if (!title) return;
+                    if (!title && !cat) return;
 
                     const catLower = cat.toLowerCase();
-                    const artCard = `
-                        <div class="gallery-card">
-                            ${imgUrl ? `<img src="${imgUrl}" alt="${title}">` : ''}
-                            <p><strong>${title}</strong></p>
-                        </div>
-                    `;
+                    const titleLower = title.toLowerCase();
 
-                    if (catLower.includes('watercolor')) {
-                        wcHTML += artCard;
-                        hasWC = true;
-                    } else if (catLower.includes('pencil') || catLower.includes('sketch')) {
-                        pencilHTML += artCard;
-                        hasPencil = true;
-                    } else if (catLower.includes('acrylic')) {
-                        acrylicHTML += artCard;
-                        hasAcrylic = true;
+                    // Check if it is an artwork card with image
+                    const isArt = catLower.includes('water') || catLower.includes('pencil') || catLower.includes('sketch') || catLower.includes('acrylic') || titleLower.includes('water') || titleLower.includes('sketch') || titleLower.includes('acrylic');
+
+                    if (isArt || imgUrl.startsWith('http')) {
+                        const artCard = `
+                            <div class="gallery-card">
+                                ${imgUrl ? `<img src="${imgUrl}" alt="${title}" onerror="this.src='https://via.placeholder.com/220x160?text=Artwork'">` : ''}
+                                <p><strong>${title || 'Artwork'}</strong>${desc && !desc.startsWith('http') ? `<br><small>${desc}</small>` : ''}</p>
+                            </div>
+                        `;
+
+                        if (catLower.includes('water') || titleLower.includes('water')) {
+                            wcHTML += artCard;
+                            hasWC = true;
+                        } else if (catLower.includes('pencil') || catLower.includes('sketch') || titleLower.includes('pencil') || titleLower.includes('sketch')) {
+                            pencilHTML += artCard;
+                            hasPencil = true;
+                        } else if (catLower.includes('acrylic') || titleLower.includes('acrylic')) {
+                            acrylicHTML += artCard;
+                            hasAcrylic = true;
+                        }
                     } else if (catLower.includes('volunteer')) {
                         volHTML += `<li><strong>${title}</strong><br>${desc}</li>`;
                         hasVol = true;
-                    } else {
+                    } else if (title && !title.startsWith('http')) {
                         hobbyGenHTML += `<li><strong>${title}</strong><br>${desc}</li>`;
                         hasHobby = true;
                     }
