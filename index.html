@@ -177,18 +177,21 @@
     </footer>
 
     <script>
-        // CLEAN SHEET ID (ONLY THE ID STRING)
+        // CLEAN SHEET ID
         const SHEET_ID = '1JSNyk2l4I5wSZS3qEJ7ixvs_56b1aJs7';
 
         // Helper function to fetch data from a specific tab by name
         async function fetchTabData(tabName) {
             try {
-                const url = `https://docs.google.com/spreadsheets/d/e/2PACX-1vQQBg328rCUM1iakgiWF17c4x_nctIUNnU1JpCxTiXgZUufufpx_kSvOx1sZvR_yHeRmiKB4ZZN083l/pubhtml`;
+                // FIXED: API URL for JSON output by sheet tab name
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
                 const response = await fetch(url);
                 const text = await response.text();
-                const jsonText = text.substring(47, text.length - 2);
+                
+                // Extract JSON object safely
+                const jsonText = text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1);
                 const data = JSON.parse(jsonText);
-                return data.table ? data.table.rows : [];
+                return (data.table && data.table.rows) ? data.table.rows : [];
             } catch (err) {
                 console.error(`Error loading tab: ${tabName}`, err);
                 return [];
@@ -208,7 +211,7 @@
                     bioHTML += `<p><strong>${field}:</strong> ${val}</p>`;
                 }
             });
-            document.getElementById('bio-content').innerHTML = bioHTML || 'No data found.';
+            document.getElementById('bio-content').innerHTML = bioHTML || 'No data found in Bio tab.';
 
             // Education
             const eduRows = await fetchTabData('Education');
@@ -224,7 +227,7 @@
                     eduHTML += `<li><strong>${degree}</strong> (${year}) - ${dept}, ${inst} <br><small>Advisor: ${advisor}</small></li>`;
                 }
             });
-            document.getElementById('education-content').innerHTML = eduHTML + '</ul>';
+            document.getElementById('education-content').innerHTML = (eduHTML !== '<ul>' ? eduHTML + '</ul>' : 'No data found in Education tab.');
 
             // Research
             const resRows = await fetchTabData('Research');
@@ -238,7 +241,7 @@
                     resHTML += `<li><strong>${area}</strong> (${cat})<br>${desc}</li>`;
                 }
             });
-            document.getElementById('research-content').innerHTML = resHTML + '</ul>';
+            document.getElementById('research-content').innerHTML = (resHTML !== '<ul>' ? resHTML + '</ul>' : 'No data found in Research tab.');
 
             // Publications
             const pubRows = await fetchTabData('Publications');
@@ -254,7 +257,7 @@
                     pubHTML += `<li>[${type}] <strong>${title}</strong><br>${authors} - <em>${venue}</em> ${doi && doi !== '-' ? `<br><a href="${doi}" target="_blank">${doi}</a>` : ''}</li>`;
                 }
             });
-            document.getElementById('publications-content').innerHTML = pubHTML + '</ul>';
+            document.getElementById('publications-content').innerHTML = (pubHTML !== '<ul>' ? pubHTML + '</ul>' : 'No data found in Publications tab.');
 
             // Software
             const softRows = await fetchTabData('Software');
@@ -268,7 +271,7 @@
                     softHTML += `<li><strong>${name}</strong> (${cat}): ${usage}</li>`;
                 }
             });
-            document.getElementById('software-content').innerHTML = softHTML + '</ul>';
+            document.getElementById('software-content').innerHTML = (softHTML !== '<ul>' ? softHTML + '</ul>' : 'No data found in Software tab.');
 
             // Workshops & Webinars
             const workRows = await fetchTabData('Workshops & Webinars');
@@ -283,7 +286,7 @@
                     workHTML += `<li>[${type}] <strong>${title}</strong> - ${venue} (${date})</li>`;
                 }
             });
-            document.getElementById('workshops-content').innerHTML = workHTML + '</ul>';
+            document.getElementById('workshops-content').innerHTML = (workHTML !== '<ul>' ? workHTML + '</ul>' : 'No data found in Workshops tab.');
 
             // Internships
             const intRows = await fetchTabData('Internships');
@@ -297,7 +300,7 @@
                     intHTML += `<li><strong>${company}</strong> (${location}) - ${role}</li>`;
                 }
             });
-            document.getElementById('internships-content').innerHTML = intHTML + '</ul>';
+            document.getElementById('internships-content').innerHTML = (intHTML !== '<ul>' ? intHTML + '</ul>' : 'No data found in Internships tab.');
 
             // Gallery
             const galRows = await fetchTabData('Gallery');
@@ -310,7 +313,7 @@
                     galHTML += `<div class="gallery-item"><img src="${imgUrl}" alt="${eventName}"><p><small>${eventName}</small></p></div>`;
                 }
             });
-            document.getElementById('gallery-content').innerHTML = galHTML + '</div>';
+            document.getElementById('gallery-content').innerHTML = (galHTML !== '<div class="gallery-grid">' ? galHTML + '</div>' : 'No data found in Gallery tab.');
         }
 
         loadPortfolio();
