@@ -177,18 +177,18 @@
     </footer>
 
     <script>
-        // PASTE YOUR GOOGLE SHEET ID HERE
-        const SHEET_ID = 'https://docs.google.com/spreadsheets/d/1JSNyk2l4I5wSZS3qEJ7ixvs_56b1aJs7/edit?gid=1299279356#gid=1299279356';
+        // CLEAN SHEET ID (ONLY THE ID STRING)
+        const SHEET_ID = '1JSNyk2l4I5wSZS3qEJ7ixvs_56b1aJs7';
 
         // Helper function to fetch data from a specific tab by name
         async function fetchTabData(tabName) {
             try {
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(tabName)}`;
+                const url = `https://docs.google.com/spreadsheets/d/1zSi_kO_n_8hoX1__3CHjLew_cd2R7E14w-VTpMscnkY/edit?gid=1299279356#gid=1299279356`;
                 const response = await fetch(url);
                 const text = await response.text();
                 const jsonText = text.substring(47, text.length - 2);
                 const data = JSON.parse(jsonText);
-                return data.table.rows;
+                return data.table ? data.table.rows : [];
             } catch (err) {
                 console.error(`Error loading tab: ${tabName}`, err);
                 return [];
@@ -201,6 +201,7 @@
             const bioRows = await fetchTabData('Bio');
             let bioHTML = '';
             bioRows.forEach(row => {
+                if(!row.c) return;
                 const field = row.c[0] ? row.c[0].v : '';
                 const val = row.c[1] ? row.c[1].v : '';
                 if(field && val) {
@@ -213,6 +214,7 @@
             const eduRows = await fetchTabData('Education');
             let eduHTML = '<ul>';
             eduRows.forEach(row => {
+                if(!row.c) return;
                 const degree = row.c[0] ? row.c[0].v : '';
                 const dept = row.c[1] ? row.c[1].v : '';
                 const inst = row.c[2] ? row.c[2].v : '';
@@ -224,28 +226,87 @@
             });
             document.getElementById('education-content').innerHTML = eduHTML + '</ul>';
 
+            // Research
+            const resRows = await fetchTabData('Research');
+            let resHTML = '<ul>';
+            resRows.forEach(row => {
+                if(!row.c) return;
+                const cat = row.c[0] ? row.c[0].v : '';
+                const area = row.c[1] ? row.c[1].v : '';
+                const desc = row.c[2] ? row.c[2].v : '';
+                if(area) {
+                    resHTML += `<li><strong>${area}</strong> (${cat})<br>${desc}</li>`;
+                }
+            });
+            document.getElementById('research-content').innerHTML = resHTML + '</ul>';
+
             // Publications
             const pubRows = await fetchTabData('Publications');
             let pubHTML = '<ul>';
             pubRows.forEach(row => {
+                if(!row.c) return;
                 const type = row.c[0] ? row.c[0].v : '';
                 const title = row.c[1] ? row.c[1].v : '';
                 const authors = row.c[2] ? row.c[2].v : '';
                 const venue = row.c[3] ? row.c[3].v : '';
                 const doi = row.c[6] ? row.c[6].v : '';
                 if(title) {
-                    pubHTML += `<li>[${type}] <strong>${title}</strong><br>${authors} - <em>${venue}</em> ${doi !== '-' ? `<br><a href="${doi}" target="_blank">${doi}</a>` : ''}</li>`;
+                    pubHTML += `<li>[${type}] <strong>${title}</strong><br>${authors} - <em>${venue}</em> ${doi && doi !== '-' ? `<br><a href="${doi}" target="_blank">${doi}</a>` : ''}</li>`;
                 }
             });
             document.getElementById('publications-content').innerHTML = pubHTML + '</ul>';
+
+            // Software
+            const softRows = await fetchTabData('Software');
+            let softHTML = '<ul>';
+            softRows.forEach(row => {
+                if(!row.c) return;
+                const name = row.c[0] ? row.c[0].v : '';
+                const cat = row.c[1] ? row.c[1].v : '';
+                const usage = row.c[2] ? row.c[2].v : '';
+                if(name) {
+                    softHTML += `<li><strong>${name}</strong> (${cat}): ${usage}</li>`;
+                }
+            });
+            document.getElementById('software-content').innerHTML = softHTML + '</ul>';
+
+            // Workshops & Webinars
+            const workRows = await fetchTabData('Workshops & Webinars');
+            let workHTML = '<ul>';
+            workRows.forEach(row => {
+                if(!row.c) return;
+                const type = row.c[0] ? row.c[0].v : '';
+                const title = row.c[1] ? row.c[1].v : '';
+                const venue = row.c[2] ? row.c[2].v : '';
+                const date = row.c[3] ? row.c[3].v : '';
+                if(title) {
+                    workHTML += `<li>[${type}] <strong>${title}</strong> - ${venue} (${date})</li>`;
+                }
+            });
+            document.getElementById('workshops-content').innerHTML = workHTML + '</ul>';
+
+            // Internships
+            const intRows = await fetchTabData('Internships');
+            let intHTML = '<ul>';
+            intRows.forEach(row => {
+                if(!row.c) return;
+                const company = row.c[0] ? row.c[0].v : '';
+                const location = row.c[1] ? row.c[1].v : '';
+                const role = row.c[2] ? row.c[2].v : '';
+                if(company) {
+                    intHTML += `<li><strong>${company}</strong> (${location}) - ${role}</li>`;
+                }
+            });
+            document.getElementById('internships-content').innerHTML = intHTML + '</ul>';
 
             // Gallery
             const galRows = await fetchTabData('Gallery');
             let galHTML = '<div class="gallery-grid">';
             galRows.forEach(row => {
+                if(!row.c) return;
                 const eventName = row.c[0] ? row.c[0].v : '';
                 const imgUrl = row.c[1] ? row.c[1].v : '';
-                if(imgUrl && imgUrl.startsWith('http')) {
+                if(imgUrl && String(imgUrl).startsWith('http')) {
                     galHTML += `<div class="gallery-item"><img src="${imgUrl}" alt="${eventName}"><p><small>${eventName}</small></p></div>`;
                 }
             });
