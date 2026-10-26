@@ -128,6 +128,28 @@
             font-size: 1.5rem;
         }
 
+        .sub-heading {
+            color: #1e293b;
+            font-size: 1.2rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .art-subheading {
+            color: var(--primary-color);
+            font-size: 1.05rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+            border-left: 3px solid var(--primary-color);
+            padding-left: 8px;
+        }
+
         /* Bio Section */
         .bio-wrapper {
             display: flex;
@@ -227,7 +249,6 @@
             font-size: 0.95rem;
         }
 
-        
         /* Software & Internship Logo Grid Cards */
         .grid-card-container {
             display: grid;
@@ -272,6 +293,87 @@
 
         .item-info p {
             margin: 2px 0;
+            font-size: 0.88rem;
+            color: #475569;
+        }
+
+        /* Research Clean Grid Layout */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 15px;
+        }
+
+        .research-card-box {
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .research-card-box h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            font-size: 1.15rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 6px;
+        }
+
+        .research-item {
+            margin-bottom: 12px;
+        }
+
+        .research-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .research-item strong {
+            color: #1e293b;
+            font-size: 0.98rem;
+        }
+
+        .research-item p {
+            margin: 2px 0 0 0;
+            font-size: 0.88rem;
+            color: #64748b;
+        }
+
+        /* Research Highlights Cards */
+        .highlight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .highlight-card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .highlight-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .highlight-card-body {
+            padding: 15px;
+        }
+
+        .highlight-card-body h4 {
+            margin: 0 0 8px 0;
+            color: var(--primary-color);
+            font-size: 1.05rem;
+        }
+
+        .highlight-card-body p {
+            margin: 0;
             font-size: 0.88rem;
             color: #475569;
         }
@@ -380,29 +482,27 @@
         </div>
     </header>
 
+    <!-- 7 TARGET NAV TABS AS REQUESTED -->
     <nav>
-        <button class="nav-btn active" onclick="openTab('bio', this)">Bio</button>
-        <button class="nav-btn" onclick="openTab('education', this)">Education</button>
+        <button class="nav-btn active" onclick="openTab('home', this)">Home</button>
+        <button class="nav-btn" onclick="openTab('bio-sketch', this)">Bio-Sketch</button>
         <button class="nav-btn" onclick="openTab('research', this)">Research</button>
         <button class="nav-btn" onclick="openTab('publications', this)">Publications</button>
-        <button class="nav-btn" onclick="openTab('software', this)">Software</button>
-        <button class="nav-btn" onclick="openTab('workshops', this)">Workshops</button>
-        <button class="nav-btn" onclick="openTab('internships', this)">Internships</button>
-        <button class="nav-btn" onclick="openTab('teaching', this)">Teaching & Service</button>
+        <button class="nav-btn" onclick="openTab('professional', this)">Professional Contributions</button>
+        <button class="nav-btn" onclick="openTab('activities', this)">Activities</button>
         <button class="nav-btn" onclick="openTab('gallery', this)">Gallery</button>
-        <button class="nav-btn" onclick="openTab('hobbies', this)">Activities & Hobbies</button>
     </nav>
 
     <div class="container">
-        <!-- Bio Section -->
-        <section id="bio" class="tab-content active section-card">
-            <h2>Bio & Overview</h2>
+        <!-- 1. HOME TAB -->
+        <section id="home" class="tab-content active section-card">
+            <h2>Home</h2>
             <div class="bio-wrapper">
                 <div class="profile-card">
                     <img id="profile-pic" src="https://upload.wikimedia.org/wikipedia/en/1/19/IIT_Hyderabad_Insignia.svg" alt="Rakesh Kumar Sahu">
                 </div>
                 <div class="bio-details" id="bio-content">
-                    Loading overview...
+                    Loading bio details...
                 </div>
             </div>
             <div class="bio-social-buttons">
@@ -414,58 +514,84 @@
             </div>
         </section>
 
-        <!-- Education Section -->
-        <section id="education" class="tab-content section-card">
-            <h2>Education</h2>
-            <div id="education-content" class="education-container">Loading education data...</div>
+        <!-- 2. BIO-SKETCH TAB -->
+        <section id="bio-sketch" class="tab-content section-card">
+            <h2>Bio-Sketch</h2>
+            
+            <h3 class="sub-heading"><i class="fas fa-graduation-cap"></i> Education</h3>
+            <div id="education-content" class="education-container">Loading education details...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-briefcase"></i> Internships</h3>
+            <div id="internships-content">Loading internship details...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-chalkboard-teacher"></i> Workshops & Webinars</h3>
+            <div id="workshops-content">Loading workshop details...</div>
         </section>
 
-        <!-- Research Section -->
+        <!-- 3. RESEARCH TAB -->
         <section id="research" class="tab-content section-card">
-            <h2>Areas of Research</h2>
-            <div id="research-content">Loading research areas...</div>
+            <h2>Research</h2>
+            
+            <h3 class="sub-heading"><i class="fas fa-microscope"></i> Areas of Research</h3>
+            <div id="research-content">Loading research area details...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-laptop-code"></i> Software Used</h3>
+            <div id="software-content">Loading software tools and logos...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-star"></i> Research Highlights</h3>
+            <div id="highlights-content" class="highlight-grid">Loading research highlights...</div>
         </section>
 
-        <!-- Publications Section -->
+        <!-- 4. PUBLICATIONS TAB -->
         <section id="publications" class="tab-content section-card">
             <h2>Publications</h2>
-            <div id="publications-content">Loading publications...</div>
+            
+            <h3 class="sub-heading"><i class="fas fa-book-open"></i> Journals</h3>
+            <div id="journals-content">Loading journal details...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-users"></i> Conferences</h3>
+            <div id="conferences-content">Loading conference details...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-book"></i> Book Chapters</h3>
+            <div id="book-chapters-content">Loading book chapter details...</div>
         </section>
 
-        <!-- Software Section -->
-        <section id="software" class="tab-content section-card">
-            <h2>Software & Tools</h2>
-            <div id="software-content">Loading tools...</div>
+        <!-- 5. PROFESSIONAL CONTRIBUTIONS TAB -->
+        <section id="professional" class="tab-content section-card">
+            <h2>Professional Contributions</h2>
+            
+            <h3 class="sub-heading"><i class="fas fa-user-graduate"></i> Teaching Assistantship</h3>
+            <div id="ta-content">Loading teaching assistantship details...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-pen-nib"></i> Reviewer Panel</h3>
+            <div id="reviewer-content">Loading reviewer panel details...</div>
         </section>
 
-        <!-- Workshops Section -->
-        <section id="workshops" class="tab-content section-card">
-            <h2>Workshops & Webinars</h2>
-            <div id="workshops-content">Loading workshops...</div>
+        <!-- 6. ACTIVITIES TAB -->
+        <section id="activities" class="tab-content section-card">
+            <h2>Activities</h2>
+            
+            <h3 class="sub-heading"><i class="fas fa-hands-helping"></i> Volunteer</h3>
+            <div id="volunteer-content">Loading volunteer details...</div>
+
+            <h3 class="sub-heading"><i class="fas fa-heart"></i> Hobbies</h3>
+            <div id="hobbies-general-content">Loading hobbies details...</div>
+
+            <div class="art-subheading"><i class="fas fa-paint-brush"></i> Watercolor</div>
+            <div id="art-watercolor-content" class="gallery-grid">Loading watercolor artwork...</div>
+
+            <div class="art-subheading"><i class="fas fa-pencil-alt"></i> Pencil Sketch</div>
+            <div id="art-pencil-content" class="gallery-grid">Loading pencil sketches...</div>
+
+            <div class="art-subheading"><i class="fas fa-fill-drip"></i> Acrylic</div>
+            <div id="art-acrylic-content" class="gallery-grid">Loading acrylic artwork...</div>
         </section>
 
-        <!-- Internships Section -->
-        <section id="internships" class="tab-content section-card">
-            <h2>Internships</h2>
-            <div id="internships-content">Loading internships...</div>
-        </section>
-
-        <!-- Teaching & Service Section -->
-        <section id="teaching" class="tab-content section-card">
-            <h2>Teaching & Service</h2>
-            <div id="teaching-content">Loading teaching & service...</div>
-        </section>
-
-        <!-- Gallery Section -->
+        <!-- 7. GALLERY TAB -->
         <section id="gallery" class="tab-content section-card">
             <h2>Gallery</h2>
-            <div id="gallery-content">Loading gallery...</div>
-        </section>
-
-        <!-- Activities & Hobbies Section -->
-        <section id="hobbies" class="tab-content section-card">
-            <h2>Activities & Hobbies</h2>
-            <div id="hobbies-content">Loading activities & hobbies...</div>
+            <h3 class="sub-heading"><i class="fas fa-users-cog"></i> Research Group</h3>
+            <div id="gallery-content" class="gallery-grid">Loading research group photos...</div>
         </section>
     </div>
 
@@ -475,7 +601,6 @@
     </footer>
 
     <script>
-        // SPREADSHEET ID (Cache Bypassing URL appended with timestamp):
         const SHEET_ID = '1zSi_kO_n_8hoX1__3CHjLew_cd2R7E14w-VTpMscnkY';
 
         function formatImageUrl(url) {
@@ -498,7 +623,7 @@
         }
 
         function parseCSV(text) {
-            const lines = text.split('\n');
+            const lines = text.split(/\r?\n/);
             return lines.map(line => {
                 const values = [];
                 let current = '';
@@ -524,7 +649,6 @@
 
         async function fetchTabData(tabName) {
             try {
-                // Append cache buster parameter to ensure fresh Google Sheet data:
                 const cacheBuster = new Date().getTime();
                 const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}&_=${cacheBuster}`;
                 const response = await fetch(url, { cache: 'no-store' });
@@ -538,7 +662,7 @@
         }
 
         async function loadPortfolio() {
-            // 1. Bio
+            // 1. HOME TAB (BIO DETAILS)
             const bioRows = await fetchTabData('Bio');
             if (bioRows.length > 0) {
                 let bioHTML = '';
@@ -588,18 +712,10 @@
                 document.getElementById('ftr-contact').innerHTML = `Contact: ${currentEmail} | +91-${currentMobile}`;
             }
 
-            // 2. Education
+            // 2. BIO-SKETCH (EDUCATION, INTERNSHIPS, WORKSHOPS)
             const eduRows = await fetchTabData('Education');
             if (eduRows.length > 0) {
                 let eduHTML = '';
-                const logoMap = {
-                    'iit': 'https://upload.wikimedia.org/wikipedia/en/1/19/IIT_Hyderabad_Insignia.svg',
-                    'hyderabad': 'https://upload.wikimedia.org/wikipedia/en/1/19/IIT_Hyderabad_Insignia.svg',
-                    'shankaracharya': 'https://via.placeholder.com/65?text=SSTC',
-                    'bhilai': 'https://via.placeholder.com/65?text=SSTC',
-                    'raipur': 'https://via.placeholder.com/65?text=BIT'
-                };
-
                 eduRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('degree')) return;
                     const degree = row[0] || '';
@@ -611,12 +727,9 @@
 
                     if (degree) {
                         let logoUrl = '';
-                        // If logo URL is provided in column 6 or 7 of Education sheet:
-                        if (row[6] && row[6].startsWith('http')) {
-                            logoUrl = formatImageUrl(row[6]);
-                        } else if (row[7] && row[7].startsWith('http')) {
-                            logoUrl = formatImageUrl(row[7]);
-                        } else {
+                        if (row[6] && row[6].startsWith('http')) logoUrl = formatImageUrl(row[6]);
+                        else if (row[7] && row[7].startsWith('http')) logoUrl = formatImageUrl(row[7]);
+                        else {
                             const instLower = inst.toLowerCase();
                             if (instLower.includes('hyderabad') || instLower.includes('iit')) logoUrl = 'https://upload.wikimedia.org/wikipedia/en/1/19/IIT_Hyderabad_Insignia.svg';
                             else if (instLower.includes('shankaracharya') || instLower.includes('sstc')) logoUrl = 'https://via.placeholder.com/65?text=SSTC';
@@ -640,95 +753,6 @@
                 document.getElementById('education-content').innerHTML = eduHTML;
             }
 
-            // 3. Research
-            const resRows = await fetchTabData('Research');
-            if (resRows.length > 0) {
-                let resHTML = '<ul>';
-                resRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    const cat = row[0] || '';
-                    const area = row[1] || '';
-                    const desc = row[2] || '';
-                    if (area) {
-                        resHTML += `<li><strong>${area}</strong> (${cat})<br>${desc}</li>`;
-                    }
-                });
-                document.getElementById('research-content').innerHTML = resHTML + '</ul>';
-            }
-
-            // 4. Publications
-            const pubRows = await fetchTabData('Publications');
-            if (pubRows.length > 0) {
-                let pubHTML = '<ul class="pub-list">';
-                pubRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
-                    const type = row[0] || 'Journal';
-                    const title = row[1] || '';
-                    const authors = row[2] || '';
-                    const journal = row[3] || '';
-                    const venue = row[4] || '';
-                    const year = row[5] || '';
-                    const doi = row[6] || '';
-                    if (title) {
-                        pubHTML += `
-                            <li class="pub-item">
-                                <span class="pub-badge">${type}</span>
-                                <span class="pub-title">${title}</span>
-                                <div class="pub-authors">${authors} - <em>${journal}</em> ${venue && venue !== '-' ? `(${venue})` : ''} [${year}]</div>
-                                ${doi && doi !== '-' ? `<div class="pub-doi"><a href="${doi}" target="_blank"><i class="fas fa-external-link-alt"></i> View Article/DOI</a></div>` : ''}
-                            </li>
-                        `;
-                    }
-                });
-                document.getElementById('publications-content').innerHTML = pubHTML + '</ul>';
-            }
-
-            // 5. Software
-            const softRows = await fetchTabData('Software');
-            if (softRows.length > 0) {
-                let softHTML = '<div class="grid-card-container">';
-                softRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && (row[0].toLowerCase().includes('software') || row[0].toLowerCase().includes('tool'))) return;
-                    const name = row[0] || '';
-                    const cat = row[1] || '';
-                    const usage = row[2] || '';
-                    const rawLogo = row[3] || '';
-                    const logoUrl = rawLogo && rawLogo.startsWith('http') ? formatImageUrl(rawLogo) : '';
-
-                    if (name) {
-                        softHTML += `
-                            <div class="item-card">
-                                ${logoUrl ? `<img src="${logoUrl}" alt="${name}" class="item-logo" onerror="this.style.display='none'">` : ''}
-                                <div class="item-info">
-                                    <h3>${name}</h3>
-                                    <p><strong>Category:</strong> ${cat}</p>
-                                    <p>${usage}</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                document.getElementById('software-content').innerHTML = softHTML + '</div>';
-            }
-
-            // 6. Workshops & Webinars
-            const workRows = await fetchTabData('Workshops & Webinars');
-            if (workRows.length > 0) {
-                let workHTML = '<ul>';
-                workRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
-                    const type = row[0] || '';
-                    const title = row[1] || '';
-                    const venue = row[2] || '';
-                    const date = row[3] || '';
-                    if (title) {
-                        workHTML += `<li>[${type}] <strong>${title}</strong> - ${venue} (${date})</li>`;
-                    }
-                });
-                document.getElementById('workshops-content').innerHTML = workHTML + '</ul>';
-            }
-
-            // 7. Internships
             const intRows = await fetchTabData('Internships');
             if (intRows.length > 0) {
                 let intHTML = '<div class="grid-card-container">';
@@ -756,24 +780,241 @@
                 document.getElementById('internships-content').innerHTML = intHTML + '</div>';
             }
 
-            // 8. Teaching & Service
+            const workRows = await fetchTabData('Workshops & Webinars');
+            if (workRows.length > 0) {
+                let workHTML = '<ul>';
+                workRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
+                    const type = row[0] || '';
+                    const title = row[1] || '';
+                    const venue = row[2] || '';
+                    const date = row[3] || '';
+                    if (title) {
+                        workHTML += `<li>[${type}] <strong>${title}</strong> - ${venue} (${date})</li>`;
+                    }
+                });
+                document.getElementById('workshops-content').innerHTML = workHTML + '</ul>';
+            }
+
+            // 3. RESEARCH (AREAS, SOFTWARE USED WITH LOGOS, HIGHLIGHTS)
+            const resRows = await fetchTabData('Research');
+            if (resRows.length > 0) {
+                let coreItems = [];
+                let otherItems = [];
+
+                resRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
+                    const cat = (row[0] || '').trim();
+                    const area = (row[1] || '').trim();
+                    const desc = (row[2] || '').trim();
+
+                    if (!area) return;
+
+                    const itemHTML = `
+                        <div class="research-item">
+                            <strong>• ${area}</strong>
+                            ${desc ? `<p>${desc}</p>` : ''}
+                        </div>
+                    `;
+
+                    if (cat.toLowerCase().includes('core')) {
+                        coreItems.push(itemHTML);
+                    } else {
+                        otherItems.push(itemHTML);
+                    }
+                });
+
+                let resHTML = '<div class="research-grid">';
+                if (coreItems.length > 0) {
+                    resHTML += `<div class="research-card-box"><h3><i class="fas fa-bullseye"></i> Core Focus Areas</h3>${coreItems.join('')}</div>`;
+                }
+                if (otherItems.length > 0) {
+                    resHTML += `<div class="research-card-box"><h3><i class="fas fa-lightbulb"></i> Other Areas of Interest</h3>${otherItems.join('')}</div>`;
+                }
+                resHTML += '</div>';
+                document.getElementById('research-content').innerHTML = resHTML;
+            }
+
+            const softRows = await fetchTabData('Software');
+            if (softRows.length > 0) {
+                let softHTML = '<div class="grid-card-container">';
+                softRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && (row[0].toLowerCase().includes('software') || row[0].toLowerCase().includes('tool'))) return;
+                    const name = row[0] || '';
+                    const cat = row[1] || '';
+                    const usage = row[2] || '';
+                    const rawLogo = row[3] || '';
+                    const logoUrl = rawLogo && rawLogo.startsWith('http') ? formatImageUrl(rawLogo) : '';
+
+                    if (name) {
+                        softHTML += `
+                            <div class="item-card">
+                                ${logoUrl ? `<img src="${logoUrl}" alt="${name}" class="item-logo" onerror="this.style.display='none'">` : ''}
+                                <div class="item-info">
+                                    <h3>${name}</h3>
+                                    <p><strong>Category:</strong> ${cat}</p>
+                                    <p>${usage}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                document.getElementById('software-content').innerHTML = softHTML + '</div>';
+            }
+
+            const highRows = await fetchTabData('Research Highlights');
+            if (highRows.length > 0) {
+                let highHTML = '';
+                highRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('title')) return;
+                    const title = row[0] || '';
+                    const desc = row[1] || '';
+                    const imgUrl = formatImageUrl(row[2] || '');
+
+                    if (title) {
+                        highHTML += `
+                            <div class="highlight-card">
+                                ${imgUrl ? `<img src="${imgUrl}" alt="${title}" onerror="this.src='https://via.placeholder.com/300x180?text=Research+Graphic'">` : ''}
+                                <div class="highlight-card-body">
+                                    <h4>${title}</h4>
+                                    <p>${desc}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                document.getElementById('highlights-content').innerHTML = highHTML || '<p>No research highlights loaded yet.</p>';
+            }
+
+            // 4. PUBLICATIONS (JOURNALS, CONFERENCES, BOOK CHAPTERS)
+            const pubRows = await fetchTabData('Publications');
+            if (pubRows.length > 0) {
+                let journalsHTML = '<ul class="pub-list">';
+                let confHTML = '<ul class="pub-list">';
+                let bookHTML = '<ul class="pub-list">';
+                let hasJ = false, hasC = false, hasB = false;
+
+                pubRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
+                    const type = (row[0] || 'Journal').trim();
+                    const title = row[1] || '';
+                    const authors = row[2] || '';
+                    const journal = row[3] || '';
+                    const venue = row[4] || '';
+                    const year = row[5] || '';
+                    const doi = row[6] || '';
+
+                    if (!title) return;
+
+                    const pubItem = `
+                        <li class="pub-item">
+                            <span class="pub-badge">${type}</span>
+                            <span class="pub-title">${title}</span>
+                            <div class="pub-authors">${authors} - <em>${journal}</em> ${venue && venue !== '-' ? `(${venue})` : ''} [${year}]</div>
+                            ${doi && doi !== '-' ? `<div class="pub-doi"><a href="${doi}" target="_blank"><i class="fas fa-external-link-alt"></i> View Article/DOI</a></div>` : ''}
+                        </li>
+                    `;
+
+                    const typeLower = type.toLowerCase();
+                    if (typeLower.includes('book') || typeLower.includes('chapter')) {
+                        bookHTML += pubItem;
+                        hasB = true;
+                    } else if (typeLower.includes('conference') || typeLower.includes('proceeding')) {
+                        confHTML += pubItem;
+                        hasC = true;
+                    } else {
+                        journalsHTML += pubItem;
+                        hasJ = true;
+                    }
+                });
+
+                document.getElementById('journals-content').innerHTML = hasJ ? journalsHTML + '</ul>' : '<p>No journal publications listed yet.</p>';
+                document.getElementById('conferences-content').innerHTML = hasC ? confHTML + '</ul>' : '<p>No conference proceedings listed yet.</p>';
+                document.getElementById('book-chapters-content').innerHTML = hasB ? bookHTML + '</ul>' : '<p>No book chapters listed yet.</p>';
+            }
+
+            // 5. PROFESSIONAL CONTRIBUTIONS (TEACHING ASSISTANTSHIP, REVIEWER PANEL)
             const teachRows = await fetchTabData('Teaching & Service');
             if (teachRows.length > 0) {
-                let teachHTML = '<ul>';
+                let taHTML = '<ul>';
+                let revHTML = '<ul>';
+                let hasTA = false, hasRev = false;
+
                 teachRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    const cat = row[0] || '';
+                    const cat = (row[0] || '').trim();
                     const role = row[1] || '';
                     const inst = row[2] || '';
                     const details = row[3] || '';
-                    if (role) {
-                        teachHTML += `<li><strong>${role}</strong> (${cat}) - ${inst} <br><small>${details}</small></li>`;
+
+                    if (!role) return;
+
+                    const item = `<li><strong>${role}</strong> - ${inst} <br><small>${details}</small></li>`;
+
+                    if (cat.toLowerCase().includes('reviewer') || cat.toLowerCase().includes('editor') || role.toLowerCase().includes('reviewer')) {
+                        revHTML += item;
+                        hasRev = true;
+                    } else {
+                        taHTML += item;
+                        hasTA = true;
                     }
                 });
-                document.getElementById('teaching-content').innerHTML = teachHTML + '</ul>';
+
+                document.getElementById('ta-content').innerHTML = hasTA ? taHTML + '</ul>' : '<p>No teaching assistantship listed yet.</p>';
+                document.getElementById('reviewer-content').innerHTML = hasRev ? revHTML + '</ul>' : '<p>No reviewer panel memberships listed yet.</p>';
             }
 
-            // 9. Gallery
+            // 6. ACTIVITIES (VOLUNTEER, HOBBIES, WATERCOLOR, PENCIL SKETCH, ACRYLIC)
+            const hobbyRows = await fetchTabData('Activities & Hobbies');
+            if (hobbyRows.length > 0) {
+                let volHTML = '<ul>';
+                let hobbyGenHTML = '<ul>';
+                let wcHTML = '', pencilHTML = '', acrylicHTML = '';
+                let hasVol = false, hasHobby = false, hasWC = false, hasPencil = false, hasAcrylic = false;
+
+                hobbyRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
+                    const cat = (row[0] || '').trim();
+                    const title = row[1] || '';
+                    const desc = row[2] || '';
+                    const imgUrl = formatImageUrl(row[3] || '');
+
+                    if (!title) return;
+
+                    const catLower = cat.toLowerCase();
+                    const artCard = `
+                        <div class="gallery-card">
+                            ${imgUrl ? `<img src="${imgUrl}" alt="${title}">` : ''}
+                            <p><strong>${title}</strong></p>
+                        </div>
+                    `;
+
+                    if (catLower.includes('watercolor')) {
+                        wcHTML += artCard;
+                        hasWC = true;
+                    } else if (catLower.includes('pencil') || catLower.includes('sketch')) {
+                        pencilHTML += artCard;
+                        hasPencil = true;
+                    } else if (catLower.includes('acrylic')) {
+                        acrylicHTML += artCard;
+                        hasAcrylic = true;
+                    } else if (catLower.includes('volunteer')) {
+                        volHTML += `<li><strong>${title}</strong><br>${desc}</li>`;
+                        hasVol = true;
+                    } else {
+                        hobbyGenHTML += `<li><strong>${title}</strong><br>${desc}</li>`;
+                        hasHobby = true;
+                    }
+                });
+
+                document.getElementById('volunteer-content').innerHTML = hasVol ? volHTML + '</ul>' : '<p>No volunteer activities listed yet.</p>';
+                document.getElementById('hobbies-general-content').innerHTML = hasHobby ? hobbyGenHTML + '</ul>' : '<p>No general hobbies listed yet.</p>';
+                document.getElementById('art-watercolor-content').innerHTML = hasWC ? wcHTML : '<p>No watercolor artwork listed yet.</p>';
+                document.getElementById('art-pencil-content').innerHTML = hasPencil ? pencilHTML : '<p>No pencil sketches listed yet.</p>';
+                document.getElementById('art-acrylic-content').innerHTML = hasAcrylic ? acrylicHTML : '<p>No acrylic artwork listed yet.</p>';
+            }
+
+            // 7. GALLERY (RESEARCH GROUPS)
             const galRows = await fetchTabData('Gallery');
             if (galRows.length > 0) {
                 let galHTML = '<div class="gallery-grid">';
@@ -785,29 +1026,13 @@
                     if (imgUrl) {
                         galHTML += `
                             <div class="gallery-card">
-                                <img src="${imgUrl}" alt="${eventName}" onerror="this.src='https://via.placeholder.com/220x160?text=Event+Photo'">
+                                <img src="${imgUrl}" alt="${eventName}" onerror="this.src='https://via.placeholder.com/220x160?text=Research+Group+Photo'">
                                 <p>${eventName}</p>
                             </div>
                         `;
                     }
                 });
                 document.getElementById('gallery-content').innerHTML = galHTML + '</div>';
-            }
-
-            // 10. Activities & Hobbies
-            const hobbyRows = await fetchTabData('Activities & Hobbies');
-            if (hobbyRows.length > 0) {
-                let hobbyHTML = '<ul>';
-                hobbyRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    const cat = row[0] || '';
-                    const name = row[1] || '';
-                    const desc = row[2] || '';
-                    if (name) {
-                        hobbyHTML += `<li><strong>${name}</strong> (${cat})<br>${desc}</li>`;
-                    }
-                });
-                document.getElementById('hobbies-content').innerHTML = hobbyHTML + '</ul>';
             }
         }
 
