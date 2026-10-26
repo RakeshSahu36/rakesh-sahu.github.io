@@ -561,11 +561,18 @@
                     const thesis = row[5] || '';
 
                     if (degree) {
-                        let logoUrl = 'https://via.placeholder.com/65?text=Institute';
-                        const instLower = inst.toLowerCase();
-                        if (instLower.includes('hyderabad') || instLower.includes('iit')) logoUrl = logoMap['iit'];
-                        else if (instLower.includes('shankaracharya') || instLower.includes('sstc')) logoUrl = logoMap['shankaracharya'];
-                        else if (instLower.includes('bhilai') || instLower.includes('raipur') || instLower.includes('bit')) logoUrl = logoMap['raipur'];
+                        let logoUrl = '';
+                        // If logo URL is provided in column 6 or 7 of Education sheet:
+                        if (row[6] && row[6].startsWith('http')) {
+                            logoUrl = formatImageUrl(row[6]);
+                        } else if (row[7] && row[7].startsWith('http')) {
+                            logoUrl = formatImageUrl(row[7]);
+                        } else {
+                            const instLower = inst.toLowerCase();
+                            if (instLower.includes('hyderabad') || instLower.includes('iit')) logoUrl = 'https://upload.wikimedia.org/wikipedia/en/1/19/IIT_Hyderabad_Insignia.svg';
+                            else if (instLower.includes('shankaracharya') || instLower.includes('sstc')) logoUrl = 'https://via.placeholder.com/65?text=SSTC';
+                            else if (instLower.includes('bhilai') || instLower.includes('raipur') || instLower.includes('bit')) logoUrl = 'https://via.placeholder.com/65?text=BIT';
+                        }
 
                         eduHTML += `
                             <div class="education-card">
