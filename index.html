@@ -456,39 +456,60 @@
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 20px;
+            gap: 22px;
             margin-top: 20px;
         }
 
         .gallery-card {
             background: #ffffff;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
             text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .gallery-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .gallery-card-img-wrapper {
+            background: #f1f5f9;
+            width: 100%;
+            height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .gallery-card img {
-            width: 100%;
-            height: 260px;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
             object-fit: contain;
-            background: #f8fafc;
             display: block;
-            padding: 4px;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-card:hover img {
+            transform: scale(1.03);
         }
 
         .gallery-card p {
-            margin: 10px;
+            margin: 0;
+            padding: 10px 12px;
             font-size: 0.88rem;
             font-weight: 600;
-            color: #475569;
+            color: #334155;
+            background: #ffffff;
+            border-top: 1px solid #f1f5f9;
         }
 
         ul { padding-left: 20px; }
@@ -896,8 +917,8 @@
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('topic')) return;
                     
                     const topic = (row[0] || 'General').trim();
-                    const title = (row[1] || '').trim();
-                    const desc = (row[2] || '').trim();
+                    let title = (row[1] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    let desc = (row[2] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
                     const rawImg = row[3] || '';
                     const imgUrl = formatImageUrl(rawImg);
                     const linkUrl = (row[4] || '').trim();
@@ -1336,8 +1357,8 @@
                     const cat = (row[0] || '').trim();
                     if (!cat) return;
 
-                    const title = (row[1] || '').trim();
-                    const desc = (row[2] || '').trim();
+                    let title = (row[1] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    let desc = (row[2] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
 
                     // Find image URL across all columns in case title/desc are empty
                     let imgUrl = '';
@@ -1383,7 +1404,9 @@
                             items.forEach((item, index) => {
                                 fullHTML += `
                                     <div class="gallery-card">
-                                        <img src="${item.imgUrl}" alt="${item.title || categoryName + ' ' + (index + 1)}" onerror="this.src='https://via.placeholder.com/380x280?text=${encodeURIComponent(categoryName)}'">
+                                        <div class="gallery-card-img-wrapper">
+                                            <img src="${item.imgUrl}" alt="${item.title || categoryName}" onerror="this.src='https://via.placeholder.com/380x280?text=${encodeURIComponent(categoryName)}'">
+                                        </div>
                                         ${(item.title || item.desc) ? `<p><strong>${item.title}</strong>${item.desc ? `<br><small>${item.desc}</small>` : ''}</p>` : ''}
                                     </div>
                                 `;
@@ -1431,8 +1454,10 @@
                     if (imgUrl) {
                         galHTML += `
                             <div class="gallery-card">
-                                <img src="${imgUrl}" alt="${eventName}" onerror="this.src='https://via.placeholder.com/220x160?text=Research+Group+Photo'">
-                                <p>${eventName}</p>
+                                <div class="gallery-card-img-wrapper">
+                                    <img src="${imgUrl}" alt="${eventName}" onerror="this.src='https://via.placeholder.com/220x160?text=Research+Group+Photo'">
+                                </div>
+                                ${eventName ? `<p>${eventName}</p>` : ''}
                             </div>
                         `;
                     }
