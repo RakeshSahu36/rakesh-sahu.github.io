@@ -1319,7 +1319,7 @@
                 document.getElementById('book-chapters-content').innerHTML = hasB ? bookHTML + '</ul>' : '<p>No book chapters listed yet.</p>';
             }
 
-            // 5. PROFESSIONAL CONTRIBUTIONS (DYNAMIC CATEGORY PARSER)
+            // 5. PROFESSIONAL CONTRIBUTIONS (DYNAMIC BULLETED CATEGORY PARSER)
             const teachRows = await fetchTabData('Teaching & Service');
             const profContainer = document.getElementById('professional');
 
@@ -1359,21 +1359,22 @@
                         fullHTML += `<h3 class="sub-heading"><i class="fas ${iconClass}"></i> ${categoryName}</h3>`;
 
                         if (items.length > 0) {
-                            fullHTML += `<div class="prof-card-grid">`;
+                            fullHTML += `<ul style="margin-bottom: 20px;">`;
                             items.forEach(item => {
+                                let mainText = item.role || item.inst;
+                                let subParts = [];
+                                if (item.role && item.inst) subParts.push(item.inst);
+                                if (item.details) subParts.push(item.details);
+                                
                                 fullHTML += `
-                                    <div class="prof-card">
-                                        <div class="prof-card-header">
-                                            <h4 class="prof-card-title">${item.role || item.inst || categoryName}</h4>
-                                            ${item.details ? `<span class="prof-card-period">${item.details}</span>` : ''}
-                                        </div>
-                                        ${item.inst && item.role ? `<div class="prof-card-inst"><i class="fas fa-university"></i> ${item.inst}</div>` : ''}
-                                    </div>
+                                    <li style="margin-bottom: 8px;">
+                                        <strong>${mainText}</strong>${subParts.length > 0 ? ` - ${subParts.join(' | ')}` : ''}
+                                    </li>
                                 `;
                             });
-                            fullHTML += `</div>`;
+                            fullHTML += `</ul>`;
                         } else {
-                            fullHTML += `<p style="color:#64748b; font-size:0.9rem;">No details added yet for this category in Google Sheet.</p>`;
+                            fullHTML += `<p style="color:#64748b; font-size:0.9rem;">No entries listed yet under this category.</p>`;
                         }
                     });
 
