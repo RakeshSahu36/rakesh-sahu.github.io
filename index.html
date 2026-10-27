@@ -1085,17 +1085,19 @@
             if (expRows.length > 0) {
                 let html = '<div class="grid-card-container">';
                 expRows.forEach((row, idx) => {
-                    // Skip the top header row (Row 1)
+                    // Skip header row if present
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('role')) return;
 
                     const role = (row[0] || '').trim();
                     const org = (row[1] || '').trim();
                     const duration = (row[2] || '').trim();
                     const title = (row[3] || '').trim();
-                    const logoUrl = formatImageUrl(row[4] || row[3] || ''); // Fallback check for logo column
+                    const logoUrl = formatImageUrl(row[4] || row[3] || '');
 
                     if (role || org) {
-                        const logoTag = logoUrl && logoUrl.startsWith('http') ? `<img src="${logoUrl}" class="item-logo" alt="${org}">` : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-user-tie"></i></div>`;
+                        const logoTag = (logoUrl && logoUrl.startsWith('http')) 
+                            ? `<img src="${logoUrl}" class="item-logo" alt="${org}">` 
+                            : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-user-tie"></i></div>`;
                         html += `
                             <div class="item-card">
                                 ${logoTag}
