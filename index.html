@@ -30,20 +30,20 @@
         }
 
         header {
-    /* Custom Banner Image Support */
-    background: linear-gradient(rgba(11, 19, 41, 0.45), rgba(15, 23, 42, 0.55)), 
-                url('https://lh3.googleusercontent.com/d/1g6v6_qbxT9YptackJSf0bNoVXpzdKxGY'),
-                linear-gradient(135deg, #0b1329 0%, #1a2a4a 50%, #0f172a 100%);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: white;
-    padding: 50px 20px 40px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    position: relative;
-    border-bottom: 3px solid var(--accent-color);
-}
+            /* Custom Banner Image Support: Upload banner.jpg to your repo or replace the URL below */
+            background: linear-gradient(rgba(11, 19, 41, 0.75), rgba(15, 23, 42, 0.85)), 
+                        url('https://lh3.googleusercontent.com/d/1g6v6_qbxT9YptackJSf0bNoVXpzdKxGY'),
+                        linear-gradient(135deg, #0b1329 0%, #1a2a4a 50%, #0f172a 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            padding: 50px 20px 40px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: relative;
+            border-bottom: 3px solid var(--accent-color);
+        }
 
         header::before {
             content: '';
@@ -504,7 +504,157 @@
         }
 
         footer p { margin: 4px 0; }
-    </style>
+    
+        /* Dropdown Navigation Menu for Blogs */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #0f172a;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.25);
+            z-index: 1100;
+            border-radius: 0 0 8px 8px;
+            overflow: hidden;
+            border: 1px solid #1e293b;
+        }
+
+        .dropdown-content a {
+            color: #cbd5e1;
+            padding: 12px 18px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #1e293b;
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Blog Card Grid Layout */
+        .blog-topic-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .blog-tag-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .blog-tag-btn:hover, .blog-tag-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .blog-card {
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+        }
+
+        .blog-card-body {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .blog-category-badge {
+            align-self: flex-start;
+            background: #e0f2fe;
+            color: #0284c7;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .blog-card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 10px 0;
+            line-height: 1.35;
+        }
+
+        .blog-card-desc {
+            font-size: 0.9rem;
+            color: #475569;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .blog-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .blog-card-date {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .blog-card-link {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+</style>
 </head>
 <body>
 
@@ -530,6 +680,16 @@
         <button class="nav-btn" onclick="openTab('professional', this)">Professional Contributions</button>
         <button class="nav-btn" onclick="openTab('activities', this)">Activities</button>
         <button class="nav-btn" onclick="openTab('gallery', this)">Gallery</button>
+        <div class="dropdown">
+            <button class="nav-btn" id="blog-tab-btn" onclick="openTab('blogs', this)">Blogs <i class="fas fa-chevron-down" style="font-size:0.75rem; margin-left:4px;"></i></button>
+            <div class="dropdown-content" id="blog-dropdown-topics">
+                <a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('All'); return false;"><i class="fas fa-layer-group"></i> All Topics</a>
+                <a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('Wave Propagation'); return false;"><i class="fas fa-wave-square"></i> Wave Propagation</a>
+                <a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('Finite Element Simulation'); return false;"><i class="fas fa-cube"></i> Multiphysics Simulation</a>
+                <a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('NDT & Ultrasonic Testing'); return false;"><i class="fas fa-search"></i> NDT & Ultrasonic Testing</a>
+                <a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('Signal Processing'); return false;"><i class="fas fa-chart-line"></i> Signal Processing</a>
+            </div>
+        </div>
     </nav>
 
     <div class="container">
@@ -635,6 +795,22 @@
             <h3 class="sub-heading"><i class="fas fa-users-cog"></i> Research Group</h3>
             <div id="gallery-content" class="gallery-grid">Loading research group photos...</div>
         </section>
+
+        <!-- 8. BLOGS TAB -->
+        <section id="blogs" class="tab-content section-card">
+            <h2>Research & Simulation Blogs</h2>
+            <p style="color:#64748b; margin-bottom: 20px;">Insights, tutorials, and developments in Wave Mechanics, Multiphysics Modeling, and Non-Destructive Evaluation.</p>
+
+            <div class="blog-topic-tags" id="blog-tags-container">
+                <button class="blog-tag-btn active" onclick="filterBlogTopic('All')">All Topics</button>
+                <button class="blog-tag-btn" onclick="filterBlogTopic('Wave Propagation')">Wave Propagation</button>
+                <button class="blog-tag-btn" onclick="filterBlogTopic('Finite Element Simulation')">Multiphysics Simulation</button>
+                <button class="blog-tag-btn" onclick="filterBlogTopic('NDT & Ultrasonic Testing')">NDT & Ultrasonic Testing</button>
+                <button class="blog-tag-btn" onclick="filterBlogTopic('Signal Processing')">Signal Processing</button>
+            </div>
+
+            <div id="blog-content-grid" class="blog-grid">Loading blogs...</div>
+        </section>
     </div>
 
     <footer id="footer-section">
@@ -714,6 +890,129 @@
                 console.error(`Error loading tab "${tabName}":`, err);
                 return [];
             }
+        }
+
+        async function 
+        // BLOGS LOADER & FILTER SYSTEM
+        let allBlogPosts = [];
+
+        async function loadBlogsData() {
+            const blogRows = await fetchTabData('Blogs');
+            const blogGrid = document.getElementById('blog-content-grid');
+            
+            if (blogRows.length > 0) {
+                allBlogPosts = [];
+                let topicsSet = new Set(['All']);
+
+                blogRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('topic')) return;
+                    
+                    const topic = (row[0] || 'General').trim();
+                    const title = (row[1] || '').trim();
+                    const desc = (row[2] || '').trim();
+                    const rawImg = row[3] || '';
+                    const imgUrl = formatImageUrl(rawImg);
+                    const linkUrl = (row[4] || '').trim();
+                    const dateStr = (row[5] || '').trim();
+
+                    if (!title) return;
+
+                    topicsSet.add(topic);
+                    allBlogPosts.push({ topic, title, desc, imgUrl, linkUrl, dateStr });
+                });
+
+                // Update dropdown menu dynamically if topics exist in Google Sheet
+                if (allBlogPosts.length > 0) {
+                    let dropdownHTML = `<a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('All'); return false;"><i class="fas fa-layer-group"></i> All Topics</a>`;
+                    let tagsHTML = `<button class="blog-tag-btn active" onclick="filterBlogTopic('All')">All Topics</button>`;
+                    
+                    Array.from(topicsSet).filter(t => t !== 'All').forEach(t => {
+                        dropdownHTML += `<a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('${t}'); return false;"><i class="fas fa-bookmark"></i> ${t}</a>`;
+                        tagsHTML += `<button class="blog-tag-btn" onclick="filterBlogTopic('${t}')">${t}</button>`;
+                    });
+
+                    document.getElementById('blog-dropdown-topics').innerHTML = dropdownHTML;
+                    document.getElementById('blog-tags-container').innerHTML = tagsHTML;
+                    renderBlogPosts('All');
+                } else {
+                    renderSampleBlogs();
+                }
+            } else {
+                renderSampleBlogs();
+            }
+        }
+
+        function renderSampleBlogs() {
+            allBlogPosts = [
+                {
+                    topic: 'Wave Propagation',
+                    title: 'Simulating Guided Wave Propagation in Cylindrical Structures',
+                    desc: 'A breakdown of dispersion curves and ultrasonic guided wave behavior in pipe inspection using COMSOL and MATLAB.',
+                    imgUrl: 'https://lh3.googleusercontent.com/d/1g6v6_qbxT9YptackJSf0bNoVXpzdKxGY',
+                    linkUrl: '#',
+                    dateStr: '2026-03-15'
+                },
+                {
+                    topic: 'Finite Element Simulation',
+                    title: 'Finite Element Modeling for Ultrasonic NDT Verification',
+                    desc: 'How time-domain FEA simulations help optimize transducer frequency selection and sensor placement.',
+                    imgUrl: 'https://via.placeholder.com/400x220?text=FEA+Simulation+Model',
+                    linkUrl: '#',
+                    dateStr: '2026-02-28'
+                },
+                {
+                    topic: 'NDT & Ultrasonic Testing',
+                    title: 'Defect Detection in Aerospace Composites using NDE Analytics',
+                    desc: 'Exploring signal amplitude and time-of-flight evaluation for accurate flaw imaging in structural health monitoring.',
+                    imgUrl: 'https://via.placeholder.com/400x220?text=Ultrasonic+Defect+Detection',
+                    linkUrl: '#',
+                    dateStr: '2026-01-10'
+                }
+            ];
+            renderBlogPosts('All');
+        }
+
+        function filterBlogTopic(selectedTopic) {
+            // Highlight active tag button
+            document.querySelectorAll('.blog-tag-btn').forEach(btn => {
+                if (btn.innerText.trim() === selectedTopic.trim() || (selectedTopic === 'All' && btn.innerText.includes('All'))) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            renderBlogPosts(selectedTopic);
+        }
+
+        function renderBlogPosts(topicFilter) {
+            const blogGrid = document.getElementById('blog-content-grid');
+            const filtered = topicFilter === 'All' ? allBlogPosts : allBlogPosts.filter(p => p.topic.toLowerCase().trim() === topicFilter.toLowerCase().trim());
+
+            if (filtered.length === 0) {
+                blogGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 30px;">No blog posts found for topic "${topicFilter}".</p>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(post => {
+                html += `
+                    <div class="blog-card">
+                        ${post.imgUrl ? `<img src="${post.imgUrl}" alt="${post.title}" onerror="this.src='https://via.placeholder.com/400x220?text=Simulation+Blog'">` : ''}
+                        <div class="blog-card-body">
+                            <span class="blog-category-badge">${post.topic}</span>
+                            <h3 class="blog-card-title">${post.title}</h3>
+                            <p class="blog-card-desc">${post.desc}</p>
+                            <div class="blog-card-footer">
+                                <span class="blog-card-date">${post.dateStr || 'Recent'}</span>
+                                ${post.linkUrl && post.linkUrl !== '#' ? `<a href="${post.linkUrl}" target="_blank" class="blog-card-link">Read Full Article <i class="fas fa-arrow-right"></i></a>` : '<span class="blog-card-link">Research Note</span>'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            blogGrid.innerHTML = html;
         }
 
         async function loadPortfolio() {
@@ -1118,6 +1417,7 @@
         }
 
         loadPortfolio();
+        loadBlogsData();
     </script>
 </body>
 </html>
