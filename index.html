@@ -30,7 +30,6 @@
         }
 
         header {
-            /* Custom Banner Image Support: Upload banner.jpg to your repo or replace the URL below */
             background: linear-gradient(rgba(11, 19, 41, 0.75), rgba(15, 23, 42, 0.85)), 
                         url('https://lh3.googleusercontent.com/d/1g6v6_qbxT9YptackJSf0bNoVXpzdKxGY'),
                         linear-gradient(135deg, #0b1329 0%, #1a2a4a 50%, #0f172a 100%);
@@ -274,7 +273,7 @@
             font-size: 0.95rem;
         }
 
-        /* Software & Internship Logo Grid Cards */
+        /* Software, Experience & Internship Logo Grid Cards */
         .grid-card-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -452,7 +451,7 @@
             font-weight: 600;
         }
 
-        /* Gallery Grid - 2 Columns Full Width */
+        /* Gallery Grid */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -682,8 +681,7 @@
             align-items: center;
             gap: 5px;
         }
-
-</style>
+    </style>
 </head>
 <body>
 
@@ -749,6 +747,9 @@
             <h3 class="sub-heading"><i class="fas fa-graduation-cap"></i> Education</h3>
             <div id="education-content" class="education-container">Loading education details...</div>
 
+            <h3 class="sub-heading"><i class="fas fa-user-tie"></i> Experience</h3>
+            <div id="experience-content">Loading experience details...</div>
+
             <h3 class="sub-heading"><i class="fas fa-briefcase"></i> Internships</h3>
             <div id="internships-content">Loading internship details...</div>
 
@@ -799,7 +800,6 @@
         </section>
 
         <!-- 6. ACTIVITIES TAB -->
-                <!-- 6. ACTIVITIES TAB -->
         <section id="activities" class="tab-content section-card">
             <h2>Activities & Creative Pursuits</h2>
             <div id="activities-dynamic-container">Loading activities details...</div>
@@ -941,325 +941,300 @@
                 if (topicsSet.size > 1) {
                     let dropdownHTML = `<a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('All'); return false;"><i class="fas fa-layer-group"></i> All Topics</a>`;
                     let tagsHTML = `<button class="blog-tag-btn active" onclick="filterBlogTopic('All')">All Topics</button>`;
-                    
-                    Array.from(topicsSet).filter(t => t !== 'All').forEach(t => {
-                        dropdownHTML += `<a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('${t}'); return false;"><i class="fas fa-bookmark"></i> ${t}</a>`;
-                        tagsHTML += `<button class="blog-tag-btn" onclick="filterBlogTopic('${t}')">${t}</button>`;
-                    });
 
+                    Array.from(topicsSet).forEach(t => {
+                        if (t !== 'All') {
+                            dropdownHTML += `<a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('${t.replace(/'/g, "\\'")}'); return false;"><i class="fas fa-bookmark"></i> ${t}</a>`;
+                            tagsHTML += `<button class="blog-tag-btn" onclick="filterBlogTopic('${t.replace(/'/g, "\\'")}');">${t}</button>`;
+                        }
+                    });
                     document.getElementById('blog-dropdown-topics').innerHTML = dropdownHTML;
                     document.getElementById('blog-tags-container').innerHTML = tagsHTML;
-                    renderBlogPosts('All');
-                } else {
-                    renderSampleBlogs();
                 }
+
+                renderBlogPosts('All');
             } else {
-                renderSampleBlogs();
+                blogGrid.innerHTML = '<p>No blog posts found.</p>';
             }
         }
 
-        function renderSampleBlogs() {
-            allBlogPosts = [
-                {
-                    topic: 'Wave Propagation',
-                    title: 'Simulating Guided Wave Propagation in Cylindrical Structures',
-                    desc: 'A breakdown of dispersion curves and ultrasonic guided wave behavior in pipe inspection using COMSOL and MATLAB.',
-                    imgUrl: 'https://lh3.googleusercontent.com/d/1g6v6_qbxT9YptackJSf0bNoVXpzdKxGY',
-                    linkUrl: '#',
-                    dateStr: '2026-03-15'
-                },
-                {
-                    topic: 'Finite Element Simulation',
-                    title: 'Finite Element Modeling for Ultrasonic NDT Verification',
-                    desc: 'How time-domain FEA simulations help optimize transducer frequency selection and sensor placement.',
-                    imgUrl: 'https://via.placeholder.com/400x220?text=FEA+Simulation+Model',
-                    linkUrl: '#',
-                    dateStr: '2026-02-28'
-                },
-                {
-                    topic: 'NDT & Ultrasonic Testing',
-                    title: 'Defect Detection in Aerospace Composites using NDE Analytics',
-                    desc: 'Exploring signal amplitude and time-of-flight evaluation for accurate flaw imaging in structural health monitoring.',
-                    imgUrl: 'https://via.placeholder.com/400x220?text=Ultrasonic+Defect+Detection',
-                    linkUrl: '#',
-                    dateStr: '2026-01-10'
-                }
-            ];
-            renderBlogPosts('All');
-        }
-
         function filterBlogTopic(selectedTopic) {
-            // Highlight active tag button
-            document.querySelectorAll('.blog-tag-btn').forEach(btn => {
-                if (btn.innerText.trim() === selectedTopic.trim() || (selectedTopic === 'All' && btn.innerText.includes('All'))) {
+            const buttons = document.querySelectorAll('.blog-tag-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim().toLowerCase() === selectedTopic.trim().toLowerCase()) {
                     btn.classList.add('active');
                 } else {
                     btn.classList.remove('active');
                 }
             });
-
             renderBlogPosts(selectedTopic);
         }
 
-        function renderBlogPosts(topicFilter) {
+        function renderBlogPosts(filterTopic) {
             const blogGrid = document.getElementById('blog-content-grid');
-            const filtered = topicFilter === 'All' ? allBlogPosts : allBlogPosts.filter(p => p.topic.toLowerCase().trim() === topicFilter.toLowerCase().trim());
+            const filtered = (filterTopic === 'All') 
+                ? allBlogPosts 
+                : allBlogPosts.filter(post => post.topic.toLowerCase() === filterTopic.toLowerCase());
 
             if (filtered.length === 0) {
-                blogGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #64748b; padding: 30px;">No blog posts found for topic "${topicFilter}".</p>`;
+                blogGrid.innerHTML = `<p style="grid-column: 1/-1; color: #64748b;">No articles published under "${filterTopic}" yet.</p>`;
                 return;
             }
 
             let html = '';
             filtered.forEach(post => {
+                const imgTag = post.imgUrl ? `<img src="${post.imgUrl}" alt="${post.title}">` : `<div style="height:140px; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#94a3b8;"><i class="fas fa-file-alt fa-2x"></i></div>`;
+                const linkBtn = post.linkUrl ? `<a href="${post.linkUrl}" target="_blank" class="blog-card-link">Read Article <i class="fas fa-arrow-right"></i></a>` : '';
+                const dateBadge = post.dateStr ? `<span class="blog-card-date"><i class="far fa-calendar-alt"></i> ${post.dateStr}</span>` : '<span></span>';
+
                 html += `
                     <div class="blog-card">
-                        ${post.imgUrl ? `<img src="${post.imgUrl}" alt="${post.title}" onerror="this.src='https://via.placeholder.com/400x220?text=Simulation+Blog'">` : ''}
+                        ${imgTag}
                         <div class="blog-card-body">
                             <span class="blog-category-badge">${post.topic}</span>
                             <h3 class="blog-card-title">${post.title}</h3>
                             <p class="blog-card-desc">${post.desc}</p>
                             <div class="blog-card-footer">
-                                <span class="blog-card-date">${post.dateStr || 'Recent'}</span>
-                                ${post.linkUrl && post.linkUrl !== '#' ? `<a href="${post.linkUrl}" target="_blank" class="blog-card-link">Read Full Article <i class="fas fa-arrow-right"></i></a>` : '<span class="blog-card-link">Research Note</span>'}
+                                ${dateBadge}
+                                ${linkBtn}
                             </div>
                         </div>
                     </div>
                 `;
             });
-
             blogGrid.innerHTML = html;
         }
 
-        async function loadPortfolio() {
-            // 1. HOME TAB (BIO DETAILS)
+        async function loadPortfolioData() {
+            // 1. Home Bio & Social Links
             const bioRows = await fetchTabData('Bio');
+            const bioDiv = document.getElementById('bio-content');
             if (bioRows.length > 0) {
-                let bioHTML = '';
-                let currentLab = 'NDX Lab';
-                let currentEmail = 'me25resch11009@iith.ac.in';
-                let currentMobile = '9098677266';
-
-                bioRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('field')) return;
-                    const field = (row[0] || '').trim();
-                    const val = (row[1] || '').trim();
-
-                    if (!field || !val) return;
-
-                    const fieldLower = field.toLowerCase();
-                    if (fieldLower === 'lab') {
-                        currentLab = val;
-                        bioHTML += `<p><strong>Lab:</strong> ${val}</p>`;
-                    } else if (fieldLower.includes('profile') || fieldLower.includes('photo') || fieldLower.includes('image')) {
-                        if (val.startsWith('http')) {
+                let html = '';
+                bioRows.forEach(row => {
+                    let val = (row[0] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    if (val) {
+                        if (val.startsWith('http://') || val.startsWith('https://')) {
                             document.getElementById('profile-pic').src = formatImageUrl(val);
+                        } else {
+                            html += `<p>${val}</p>`;
                         }
-                    } else if (fieldLower.includes('linkedin')) {
-                        document.getElementById('hdr-linkedin').href = val;
-                        document.getElementById('btn-linkedin').href = val;
-                    } else if (fieldLower.includes('researchgate')) {
-                        document.getElementById('hdr-researchgate').href = val;
-                        document.getElementById('btn-researchgate').href = val;
-                    } else if (fieldLower.includes('orcid')) {
-                        document.getElementById('hdr-orcid').href = val;
-                        document.getElementById('btn-orcid').href = val;
-                    } else if (fieldLower.includes('scholar')) {
-                        document.getElementById('hdr-scholar').href = val;
-                        document.getElementById('btn-scholar').href = val;
-                    } else if (fieldLower.includes('scopus')) {
-                        document.getElementById('hdr-scopus').href = val;
-                        document.getElementById('btn-scopus').href = val;
-                    } else {
-                        if (fieldLower === 'email') currentEmail = val;
-                        if (fieldLower === 'mobile') currentMobile = val;
-                        bioHTML += `<p><strong>${field}:</strong> ${val}</p>`;
                     }
                 });
-
-                document.getElementById('bio-content').innerHTML = bioHTML || 'No bio details found.';
-                document.getElementById('ftr-lab').innerHTML = `&copy; Rakesh Kumar Sahu | ${currentLab}, IIT Hyderabad`;
-                document.getElementById('ftr-contact').innerHTML = `Contact: ${currentEmail} | +91-${currentMobile}`;
+                bioDiv.innerHTML = html;
             }
 
-            // 2. BIO-SKETCH (EDUCATION, INTERNSHIPS, WORKSHOPS, WEBINARS)
+            const socialRows = await fetchTabData('Social');
+            if (socialRows.length > 0) {
+                socialRows.forEach(row => {
+                    const platform = (row[0] || '').toLowerCase().trim();
+                    const url = (row[1] || '').trim();
+                    if (platform && url) {
+                        if (platform.includes('linkedin')) {
+                            document.getElementById('hdr-linkedin').href = url;
+                            document.getElementById('btn-linkedin').href = url;
+                        } else if (platform.includes('researchgate')) {
+                            document.getElementById('hdr-researchgate').href = url;
+                            document.getElementById('btn-researchgate').href = url;
+                        } else if (platform.includes('orcid')) {
+                            document.getElementById('hdr-orcid').href = url;
+                            document.getElementById('btn-orcid').href = url;
+                        } else if (platform.includes('scholar')) {
+                            document.getElementById('hdr-scholar').href = url;
+                            document.getElementById('btn-scholar').href = url;
+                        } else if (platform.includes('scopus')) {
+                            document.getElementById('hdr-scopus').href = url;
+                            document.getElementById('btn-scopus').href = url;
+                        }
+                    }
+                });
+            }
+
+            // 2. Bio-Sketch: Education
             const eduRows = await fetchTabData('Education');
+            const eduDiv = document.getElementById('education-content');
             if (eduRows.length > 0) {
-                let eduHTML = '';
-                eduRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('degree')) return;
-                    const degree = row[0] || '';
-                    const dept = row[1] || '';
-                    const inst = row[2] || '';
-                    const duration = row[3] || '';
-                    const advisor = row[4] || '';
-                    const thesis = row[5] || '';
+                let html = '';
+                eduRows.forEach(row => {
+                    const degree = (row[0] || '').trim();
+                    const inst = (row[1] || '').trim();
+                    const duration = (row[2] || '').trim();
+                    const details = (row[3] || '').trim();
+                    const logoUrl = formatImageUrl(row[4] || '');
 
-                    if (degree) {
-                        let logoUrl = '';
-                        if (row[6] && row[6].startsWith('http')) logoUrl = formatImageUrl(row[6]);
-                        else if (row[7] && row[7].startsWith('http')) logoUrl = formatImageUrl(row[7]);
-                        else {
-                            const instLower = inst.toLowerCase();
-                            if (instLower.includes('hyderabad') || instLower.includes('iit')) logoUrl = 'https://upload.wikimedia.org/wikipedia/en/1/19/IIT_Hyderabad_Insignia.svg';
-                            else if (instLower.includes('shankaracharya') || instLower.includes('sstc')) logoUrl = 'https://via.placeholder.com/65?text=SSTC';
-                            else if (instLower.includes('bhilai') || instLower.includes('raipur') || instLower.includes('bit')) logoUrl = 'https://via.placeholder.com/65?text=BIT';
-                        }
-
-                        eduHTML += `
+                    if (degree && inst) {
+                        const logoTag = logoUrl ? `<img src="${logoUrl}" class="education-logo" alt="${inst}">` : `<div class="education-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-university fa-lg"></i></div>`;
+                        html += `
                             <div class="education-card">
-                                <img src="${logoUrl}" alt="${inst}" class="education-logo" onerror="this.src='https://via.placeholder.com/65?text=College'">
+                                ${logoTag}
                                 <div class="education-details">
-                                    <h3>${degree} (${duration})</h3>
-                                    <p><strong>Department / Specialization:</strong> ${dept}</p>
-                                    <p><strong>Institution:</strong> ${inst}</p>
-                                    ${advisor && advisor !== '-' ? `<p style="color:#64748b; font-size:0.88rem;"><strong>Advisor:</strong> ${advisor}</p>` : ''}
-                                    ${thesis && thesis !== '-' ? `<p style="color:#64748b; font-size:0.88rem;"><strong>Thesis / Project:</strong> ${thesis}</p>` : ''}
+                                    <h3>${degree}</h3>
+                                    <p><strong>${inst}</strong> ${duration ? '• (' + duration + ')' : ''}</p>
+                                    ${details ? `<p style="color:#475569; margin-top:4px;">${details}</p>` : ''}
                                 </div>
                             </div>
                         `;
                     }
                 });
-                document.getElementById('education-content').innerHTML = eduHTML;
+                eduDiv.innerHTML = html || '<p>No education details listed.</p>';
             }
 
-            const intRows = await fetchTabData('Internships');
-            if (intRows.length > 0) {
-                let intHTML = '<div class="grid-card-container">';
-                intRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && (row[0].toLowerCase().includes('company') || row[0].toLowerCase().includes('organization'))) return;
-                    const company = row[0] || '';
-                    const location = row[1] || '';
-                    const role = row[2] || '';
-                    const rawLogo = row[3] || '';
-                    const logoUrl = rawLogo && rawLogo.startsWith('http') ? formatImageUrl(rawLogo) : '';
+            // 2b. Bio-Sketch: Experience
+            const expRows = await fetchTabData('Experience');
+            const expDiv = document.getElementById('experience-content');
+            if (expRows.length > 0) {
+                let html = '<div class="grid-card-container">';
+                expRows.forEach(row => {
+                    const role = (row[0] || '').trim();
+                    const org = (row[1] || '').trim();
+                    const duration = (row[2] || '').trim();
+                    const logoUrl = formatImageUrl(row[3] || '');
 
-                    if (company) {
-                        intHTML += `
+                    if (role || org) {
+                        const logoTag = logoUrl ? `<img src="${logoUrl}" class="item-logo" alt="${org}">` : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-user-tie"></i></div>`;
+                        html += `
                             <div class="item-card">
-                                ${logoUrl ? `<img src="${logoUrl}" alt="${company}" class="item-logo" onerror="this.style.display='none'">` : ''}
+                                ${logoTag}
                                 <div class="item-info">
-                                    <h3>${company}</h3>
-                                    <p><strong>Location:</strong> ${location}</p>
-                                    <p><strong>Role / Focus:</strong> ${role}</p>
+                                    <h3>${role}</h3>
+                                    <p><strong>${org}</strong></p>
+                                    ${duration ? `<p style="font-size:0.8rem; color:#64748b;">${duration}</p>` : ''}
                                 </div>
                             </div>
                         `;
                     }
                 });
-                document.getElementById('internships-content').innerHTML = intHTML + '</div>';
+                html += '</div>';
+                expDiv.innerHTML = html;
+            } else {
+                expDiv.innerHTML = '<p style="color:#64748b;">No experience records listed.</p>';
             }
 
-            // SEPARATED WORKSHOPS AND WEBINARS (WITHOUT PREFIXES)
-            const workRows = await fetchTabData('Workshops & Webinars');
-            if (workRows.length > 0) {
-                let workshopHTML = '<ul>';
-                let webinarHTML = '<ul>';
-                let hasWorkshop = false, hasWebinar = false;
+            // 3. Bio-Sketch: Internships & Positions
+            const internRows = await fetchTabData('Internships');
+            const internDiv = document.getElementById('internships-content');
+            if (internRows.length > 0) {
+                let html = '<div class="grid-card-container">';
+                internRows.forEach(row => {
+                    const org = (row[0] || '').trim();
+                    const role = (row[1] || '').trim();
+                    const duration = (row[2] || '').trim();
+                    const logoUrl = formatImageUrl(row[3] || '');
 
-                workRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
-                    const type = (row[0] || '').trim();
-                    const title = (row[1] || '').trim();
-                    const venue = (row[2] || '').trim();
-                    const date = (row[3] || '').trim();
-
-                    if (!title) return;
-
-                    const listItem = `<li><strong>${title}</strong> - ${venue} ${date ? `(${date})` : ''}</li>`;
-
-                    if (type.toLowerCase().includes('webinar')) {
-                        webinarHTML += listItem;
-                        hasWebinar = true;
-                    } else {
-                        workshopHTML += listItem;
-                        hasWorkshop = true;
+                    if (org || role) {
+                        const logoTag = logoUrl ? `<img src="${logoUrl}" class="item-logo" alt="${org}">` : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-briefcase"></i></div>`;
+                        html += `
+                            <div class="item-card">
+                                ${logoTag}
+                                <div class="item-info">
+                                    <h3>${role || org}</h3>
+                                    <p><strong>${org}</strong></p>
+                                    ${duration ? `<p style="font-size:0.8rem; color:#64748b;">${duration}</p>` : ''}
+                                </div>
+                            </div>
+                        `;
                     }
                 });
-
-                document.getElementById('workshops-list-content').innerHTML = hasWorkshop ? workshopHTML + '</ul>' : '<p>No workshops listed yet.</p>';
-                document.getElementById('webinars-list-content').innerHTML = hasWebinar ? webinarHTML + '</ul>' : '<p>No webinars listed yet.</p>';
+                html += '</div>';
+                internDiv.innerHTML = html;
+            } else {
+                internDiv.innerHTML = '<p style="color:#64748b;">No internship records listed.</p>';
             }
 
-            // 3. RESEARCH (AREAS, SOFTWARE USED WITH LOGOS, HIGHLIGHTS)
-            const resRows = await fetchTabData('Research');
-            if (resRows.length > 0) {
-                let coreItems = [];
-                let otherItems = [];
-
-                resRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    const cat = (row[0] || '').trim();
-                    const area = (row[1] || '').trim();
-                    const desc = (row[2] || '').trim();
-
-                    if (!area) return;
-
-                    const itemHTML = `
-                        <div class="research-item">
-                            <strong>• ${area}</strong>
-                            ${desc ? `<p>${desc}</p>` : ''}
-                        </div>
-                    `;
-
-                    if (cat.toLowerCase().includes('core')) {
-                        coreItems.push(itemHTML);
-                    } else {
-                        otherItems.push(itemHTML);
+            // 4. Bio-Sketch: Workshops & Webinars
+            const workshopRows = await fetchTabData('Workshops');
+            const workshopDiv = document.getElementById('workshops-list-content');
+            if (workshopRows.length > 0) {
+                let html = '<ul>';
+                workshopRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const org = (row[1] || '').trim();
+                    const date = (row[2] || '').trim();
+                    if (title) {
+                        html += `<li><strong>${title}</strong> ${org ? '— ' + org : ''} ${date ? '(' + date + ')' : ''}</li>`;
                     }
                 });
+                html += '</ul>';
+                workshopDiv.innerHTML = html;
+            }
 
-                let resHTML = '<div class="research-grid">';
-                if (coreItems.length > 0) {
-                    resHTML += `<div class="research-card-box"><h3><i class="fas fa-bullseye"></i> Core Focus Areas</h3>${coreItems.join('')}</div>`;
-                }
-                if (otherItems.length > 0) {
-                    resHTML += `<div class="research-card-box"><h3><i class="fas fa-lightbulb"></i> Other Areas of Interest</h3>${otherItems.join('')}</div>`;
-                }
-                resHTML += '</div>';
-                document.getElementById('research-content').innerHTML = resHTML;
+            const webinarRows = await fetchTabData('Webinars');
+            const webinarDiv = document.getElementById('webinars-list-content');
+            if (webinarRows.length > 0) {
+                let html = '<ul>';
+                webinarRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const org = (row[1] || '').trim();
+                    const date = (row[2] || '').trim();
+                    if (title) {
+                        html += `<li><strong>${title}</strong> ${org ? '— ' + org : ''} ${date ? '(' + date + ')' : ''}</li>`;
+                    }
+                });
+                html += '</ul>';
+                webinarDiv.innerHTML = html;
+            }
+
+            // 5. Research: Areas of Research, Software & Highlights
+            const researchRows = await fetchTabData('Research');
+            const researchDiv = document.getElementById('research-content');
+            if (researchRows.length > 0) {
+                let html = '<div class="research-grid">';
+                researchRows.forEach(row => {
+                    const area = (row[0] || '').trim();
+                    const desc = (row[1] || '').trim();
+                    if (area) {
+                        html += `
+                            <div class="research-card-box">
+                                <h3>${area}</h3>
+                                <p style="font-size:0.92rem; color:#475569;">${desc}</p>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+                researchDiv.innerHTML = html;
             }
 
             const softRows = await fetchTabData('Software');
+            const softDiv = document.getElementById('software-content');
             if (softRows.length > 0) {
-                let softHTML = '<div class="grid-card-container">';
-                softRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && (row[0].toLowerCase().includes('software') || row[0].toLowerCase().includes('tool'))) return;
-                    const name = row[0] || '';
-                    const cat = row[1] || '';
-                    const usage = row[2] || '';
-                    const rawLogo = row[3] || '';
-                    const logoUrl = rawLogo && rawLogo.startsWith('http') ? formatImageUrl(rawLogo) : '';
+                let html = '<div class="grid-card-container">';
+                softRows.forEach(row => {
+                    const tool = (row[0] || '').trim();
+                    const desc = (row[1] || '').trim();
+                    const logoUrl = formatImageUrl(row[2] || '');
 
-                    if (name) {
-                        softHTML += `
+                    if (tool) {
+                        const logoTag = logoUrl ? `<img src="${logoUrl}" class="item-logo" alt="${tool}">` : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-code"></i></div>`;
+                        html += `
                             <div class="item-card">
-                                ${logoUrl ? `<img src="${logoUrl}" alt="${name}" class="item-logo" onerror="this.style.display='none'">` : ''}
+                                ${logoTag}
                                 <div class="item-info">
-                                    <h3>${name}</h3>
-                                    <p><strong>Category:</strong> ${cat}</p>
-                                    <p>${usage}</p>
+                                    <h3>${tool}</h3>
+                                    <p>${desc}</p>
                                 </div>
                             </div>
                         `;
                     }
                 });
-                document.getElementById('software-content').innerHTML = softHTML + '</div>';
+                html += '</div>';
+                softDiv.innerHTML = html;
             }
 
-            const highRows = await fetchTabData('Research Highlights');
-            if (highRows.length > 0) {
-                let highHTML = '';
-                highRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('title')) return;
-                    const title = row[0] || '';
-                    const desc = row[1] || '';
+            const highlightRows = await fetchTabData('Highlights');
+            const highlightDiv = document.getElementById('highlights-content');
+            if (highlightRows.length > 0) {
+                let html = '';
+                highlightRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const desc = (row[1] || '').trim();
                     const imgUrl = formatImageUrl(row[2] || '');
 
                     if (title) {
-                        highHTML += `
+                        const imgTag = imgUrl ? `<img src="${imgUrl}" alt="${title}">` : '';
+                        html += `
                             <div class="highlight-card">
-                                ${imgUrl ? `<img src="${imgUrl}" alt="${title}" onerror="this.src='https://via.placeholder.com/300x180?text=Research+Graphic'">` : ''}
+                                ${imgTag}
                                 <div class="highlight-card-body">
                                     <h4>${title}</h4>
                                     <p>${desc}</p>
@@ -1268,270 +1243,161 @@
                         `;
                     }
                 });
-                document.getElementById('highlights-content').innerHTML = highHTML || '<p>No research highlights loaded yet.</p>';
+                highlightDiv.innerHTML = html;
             }
 
-            // 4. PUBLICATIONS (FIXED WORKING DOI LINKS)
-            const pubRows = await fetchTabData('Publications');
-            if (pubRows.length > 0) {
-                let journalsHTML = '<ul class="pub-list">';
-                let confHTML = '<ul class="pub-list">';
-                let bookHTML = '<ul class="pub-list">';
-                let hasJ = false, hasC = false, hasB = false;
+            // 6. Publications: Journals, Conferences & Books
+            const journalRows = await fetchTabData('Journals');
+            const journalDiv = document.getElementById('journals-content');
+            if (journalRows.length > 0) {
+                let html = '<ul class="pub-list">';
+                journalRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const authors = (row[1] || '').trim();
+                    const journal = (row[2] || '').trim();
+                    const doiLink = formatDoiUrl(row[3] || '');
 
-                pubRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('type')) return;
-                    const type = (row[0] || 'Journal').trim();
-                    const title = row[1] || '';
-                    const authors = row[2] || '';
-                    const journal = row[3] || '';
-                    const venue = row[4] || '';
-                    const year = row[5] || '';
-                    const rawDoi = row[6] || '';
-                    const formattedDoi = formatDoiUrl(rawDoi);
-
-                    if (!title) return;
-
-                    const pubItem = `
-                        <li class="pub-item">
-                            <span class="pub-badge">${type}</span>
-                            <span class="pub-title">${title}</span>
-                            <div class="pub-authors">${authors} - <em>${journal}</em> ${venue && venue !== '-' ? `(${venue})` : ''} [${year}]</div>
-                            ${formattedDoi ? `<div class="pub-doi"><a href="${formattedDoi}" target="_blank"><i class="fas fa-external-link-alt"></i> View Article/DOI</a></div>` : ''}
-                        </li>
-                    `;
-
-                    const typeLower = type.toLowerCase();
-                    if (typeLower.includes('book') || typeLower.includes('chapter')) {
-                        bookHTML += pubItem;
-                        hasB = true;
-                    } else if (typeLower.includes('conference') || typeLower.includes('proceeding')) {
-                        confHTML += pubItem;
-                        hasC = true;
-                    } else {
-                        journalsHTML += pubItem;
-                        hasJ = true;
+                    if (title) {
+                        html += `
+                            <li class="pub-item">
+                                <div><span class="pub-badge">Journal</span> <span class="pub-title">${title}</span></div>
+                                <div class="pub-authors">${authors}</div>
+                                <div style="font-size:0.9rem; color:#475569;"><em>${journal}</em></div>
+                                ${doiLink ? `<div class="pub-doi"><a href="${doiLink}" target="_blank"><i class="fas fa-external-link-alt"></i> DOI Link</a></div>` : ''}
+                            </li>
+                        `;
                     }
                 });
-
-                document.getElementById('journals-content').innerHTML = hasJ ? journalsHTML + '</ul>' : '<p>No journal publications listed yet.</p>';
-                document.getElementById('conferences-content').innerHTML = hasC ? confHTML + '</ul>' : '<p>No conference proceedings listed yet.</p>';
-                document.getElementById('book-chapters-content').innerHTML = hasB ? bookHTML + '</ul>' : '<p>No book chapters listed yet.</p>';
+                html += '</ul>';
+                journalDiv.innerHTML = html;
             }
 
-            // 5. PROFESSIONAL CONTRIBUTIONS (DYNAMIC BULLETED CATEGORY PARSER)
-            const teachRows = await fetchTabData('Teaching & Service');
-            const profContainer = document.getElementById('professional');
+            const confRows = await fetchTabData('Conferences');
+            const confDiv = document.getElementById('conferences-content');
+            if (confRows.length > 0) {
+                let html = '<ul class="pub-list">';
+                confRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const authors = (row[1] || '').trim();
+                    const conf = (row[2] || '').trim();
+                    const doiLink = formatDoiUrl(row[3] || '');
 
-            if (teachRows.length > 0) {
-                const categoryMap = new Map();
-
-                teachRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    
-                    const cat = (row[0] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
-                    if (!cat) return;
-
-                    let role = (row[1] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
-                    let inst = (row[2] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
-                    let details = (row[3] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
-
-                    if (!categoryMap.has(cat)) {
-                        categoryMap.set(cat, []);
-                    }
-
-                    if (role || inst || details) {
-                        categoryMap.get(cat).push({ role, inst, details });
+                    if (title) {
+                        html += `
+                            <li class="pub-item">
+                                <div><span class="pub-badge" style="background:#fef3c7; color:#b45309;">Conference</span> <span class="pub-title">${title}</span></div>
+                                <div class="pub-authors">${authors}</div>
+                                <div style="font-size:0.9rem; color:#475569;"><em>${conf}</em></div>
+                                ${doiLink ? `<div class="pub-doi"><a href="${doiLink}" target="_blank"><i class="fas fa-external-link-alt"></i> Link / DOI</a></div>` : ''}
+                            </li>
+                        `;
                     }
                 });
+                html += '</ul>';
+                confDiv.innerHTML = html;
+            }
 
-                if (categoryMap.size > 0) {
-                    let fullHTML = '<h2>Professional Contributions</h2>';
+            const bookRows = await fetchTabData('BookChapters');
+            const bookDiv = document.getElementById('book-chapters-content');
+            if (bookRows.length > 0) {
+                let html = '<ul class="pub-list">';
+                bookRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const authors = (row[1] || '').trim();
+                    const book = (row[2] || '').trim();
+                    const doiLink = formatDoiUrl(row[3] || '');
 
-                    categoryMap.forEach((items, categoryName) => {
-                        let iconClass = 'fa-briefcase';
-                        const catLower = categoryName.toLowerCase();
-                        if (catLower.includes('teach') || catLower.includes('assistant')) iconClass = 'fa-user-graduate';
-                        else if (catLower.includes('review') || catLower.includes('journal')) iconClass = 'fa-pen-nib';
-                        else if (catLower.includes('conference') || catLower.includes('symposium') || catLower.includes('service')) iconClass = 'fa-users';
-                        else if (catLower.includes('academic') || catLower.includes('lab')) iconClass = 'fa-university';
+                    if (title) {
+                        html += `
+                            <li class="pub-item">
+                                <div><span class="pub-badge" style="background:#dcfce7; color:#15803d;">Chapter</span> <span class="pub-title">${title}</span></div>
+                                <div class="pub-authors">${authors}</div>
+                                <div style="font-size:0.9rem; color:#475569;"><em>${book}</em></div>
+                                ${doiLink ? `<div class="pub-doi"><a href="${doiLink}" target="_blank"><i class="fas fa-external-link-alt"></i> DOI Link</a></div>` : ''}
+                            </li>
+                        `;
+                    }
+                });
+                html += '</ul>';
+                bookDiv.innerHTML = html;
+            }
 
-                        fullHTML += `<h3 class="sub-heading"><i class="fas ${iconClass}"></i> ${categoryName}</h3>`;
+            // 7. Professional Contributions
+            const profRows = await fetchTabData('ProfessionalContributions');
+            const taDiv = document.getElementById('ta-content');
+            const revDiv = document.getElementById('reviewer-content');
 
-                        if (items.length > 0) {
-                            fullHTML += `<ul style="margin-bottom: 20px;">`;
-                            items.forEach(item => {
-                                let mainText = item.role || item.inst;
-                                let subParts = [];
-                                if (item.role && item.inst) subParts.push(item.inst);
-                                if (item.details) subParts.push(item.details);
-                                
-                                fullHTML += `
-                                    <li style="margin-bottom: 8px;">
-                                        <strong>${mainText}</strong>${subParts.length > 0 ? ` - ${subParts.join(' | ')}` : ''}
-                                    </li>
-                                `;
-                            });
-                            fullHTML += `</ul>`;
+            if (profRows.length > 0) {
+                let taHtml = '<ul>';
+                let revHtml = '<ul>';
+                let hasTa = false, hasRev = false;
+
+                profRows.forEach(row => {
+                    const category = (row[0] || '').toLowerCase().trim();
+                    const item = (row[1] || '').trim();
+
+                    if (item) {
+                        if (category.includes('teaching') || category.includes('ta')) {
+                            taHtml += `<li>${item}</li>`;
+                            hasTa = true;
                         } else {
-                            fullHTML += `<p style="color:#64748b; font-size:0.9rem;">No entries listed yet under this category.</p>`;
-                        }
-                    });
-
-                    profContainer.innerHTML = fullHTML;
-                } else {
-                    profContainer.innerHTML = '<h2>Professional Contributions</h2><p>No professional contributions listed yet.</p>';
-                }
-            } else {
-                profContainer.innerHTML = '<h2>Professional Contributions</h2><p>No professional contributions listed yet.</p>';
-            }
-
-        // 6. ACTIVITIES & HOBBIES (DYNAMIC CATEGORY PARSER)
-            const hobbyRows = await fetchTabData('Activities & Hobbies');
-            const container = document.getElementById('activities-dynamic-container');
-
-            if (hobbyRows.length > 0) {
-                // Map to preserve original category order and items
-                const categoryMap = new Map();
-
-                hobbyRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    
-                    const cat = (row[0] || '').trim();
-                    if (!cat) return;
-
-                    let title = (row[1] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
-                    let desc = (row[2] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
-
-                    // Find image URL across all columns in case title/desc are empty
-                    let imgUrl = '';
-                    for (let c = 1; c < row.length; c++) {
-                        const cellVal = (row[c] || '').trim();
-                        if (cellVal.startsWith('http')) {
-                            imgUrl = formatImageUrl(cellVal);
-                            break;
+                            revHtml += `<li>${item}</li>`;
+                            hasRev = true;
                         }
                     }
-
-                    if (!categoryMap.has(cat)) {
-                        categoryMap.set(cat, []);
-                    }
-
-                    categoryMap.get(cat).push({ title, desc, imgUrl });
                 });
 
-                if (categoryMap.size > 0) {
-                    let fullHTML = '';
+                taHtml += '</ul>';
+                revHtml += '</ul>';
 
-                    categoryMap.forEach((items, categoryName) => {
-                        const catLower = categoryName.toLowerCase();
-
-                        // Check if this category contains images (Artwork / Photography / Exhibition)
-                        const hasImages = items.some(item => item.imgUrl.length > 0);
-
-                        if (hasImages) {
-                            // Render as Image Gallery Grid
-                            let iconClass = 'fa-palette';
-                            if (catLower.includes('sketch') || catLower.includes('pencil')) iconClass = 'fa-pencil-alt';
-                            else if (catLower.includes('water')) iconClass = 'fa-paint-brush';
-                            else if (catLower.includes('acrylic')) iconClass = 'fa-fill-drip';
-                            else if (catLower.includes('digital')) iconClass = 'fa-laptop-house';
-                            else if (catLower.includes('outdoor') || catLower.includes('exhibition')) iconClass = 'fa-camera';
-                            else if (catLower.includes('poetry')) iconClass = 'fa-feather-alt';
-
-                            fullHTML += `
-                                <div class="art-subheading"><i class="fas ${iconClass}"></i> ${categoryName}</div>
-                                <div class="gallery-grid">
-                            `;
-
-                            items.forEach((item, index) => {
-                                fullHTML += `
-                                    <div class="gallery-card">
-                                        <div class="gallery-card-img-wrapper">
-                                            <img src="${item.imgUrl}" alt="${item.title || categoryName}" onerror="this.src='https://via.placeholder.com/380x280?text=${encodeURIComponent(categoryName)}'">
-                                        </div>
-                                        ${(item.title || item.desc) ? `<p><strong>${item.title}</strong>${item.desc ? `<br><small>${item.desc}</small>` : ''}</p>` : ''}
-                                    </div>
-                                `;
-                            });
-
-                            fullHTML += `</div>`;
-                        } else {
-                            // Render as Bullet List (Volunteering, Hobbies, Reading, etc.)
-                            let iconClass = 'fa-heart';
-                            if (catLower.includes('volunteer')) iconClass = 'fa-hands-helping';
-                            else if (catLower.includes('hobby') || catLower.includes('interest')) iconClass = 'fa-star';
-
-                            fullHTML += `
-                                <h3 class="sub-heading"><i class="fas ${iconClass}"></i> ${categoryName}</h3>
-                                <ul>
-                            `;
-
-                            items.forEach(item => {
-                                if (item.title || item.desc) {
-                                    fullHTML += `<li><strong>${item.title || categoryName}</strong>${item.desc ? `<br>${item.desc}` : ''}</li>`;
-                                }
-                            });
-
-                            fullHTML += `</ul>`;
-                        }
-                    });
-
-                    container.innerHTML = fullHTML;
-                } else {
-                    container.innerHTML = '<p>No activities listed yet.</p>';
-                }
-            } else {
-                container.innerHTML = '<p>No activities listed yet.</p>';
+                taDiv.innerHTML = hasTa ? taHtml : '<p>No teaching assistantship records found.</p>';
+                revDiv.innerHTML = hasRev ? revHtml : '<p>No reviewer panel records found.</p>';
             }
 
-                        // 7. GALLERY (EXACT SHEET SEQUENCE - NO CATEGORIES)
+            // 8. Activities Tab
+            const actRows = await fetchTabData('Activities');
+            const actContainer = document.getElementById('activities-dynamic-container');
+            if (actRows.length > 0) {
+                let html = '<ul>';
+                actRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const desc = (row[1] || '').trim();
+                    if (title) {
+                        html += `<li><strong>${title}</strong> ${desc ? ': ' + desc : ''}</li>`;
+                    }
+                });
+                html += '</ul>';
+                actContainer.innerHTML = html;
+            }
+
+            // 9. Gallery Tab
             const galRows = await fetchTabData('Gallery');
-            const galContainer = document.getElementById('gallery-content');
-            
+            const galDiv = document.getElementById('gallery-content');
             if (galRows.length > 0) {
-                let galHTML = '';
-                galRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && (row[0].toLowerCase().includes('event') || row[0].toLowerCase().includes('title') || row[0].toLowerCase().includes('category'))) return;
-                    
-                    let eventName = (row[0] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
-                    
-                    // Search all columns for the image URL
-                    let imgUrl = '';
-                    for (let c = 0; c < row.length; c++) {
-                        const cellVal = (row[c] || '').trim();
-                        if (cellVal.startsWith('http')) {
-                            imgUrl = formatImageUrl(cellVal);
-                            break;
-                        }
-                    }
-
-                    // If first column was the link, clear eventName
-                    if (row[0] && row[0].trim().startsWith('http')) {
-                        eventName = '';
-                    }
+                let html = '';
+                galRows.forEach(row => {
+                    const caption = (row[0] || '').trim();
+                    const imgUrl = formatImageUrl(row[1] || '');
 
                     if (imgUrl) {
-                        galHTML += `
+                        html += `
                             <div class="gallery-card">
                                 <div class="gallery-card-img-wrapper">
-                                    <img src="${imgUrl}" alt="${eventName || 'Gallery Image'}" onerror="this.src='https://via.placeholder.com/380x280?text=Gallery+Photo'">
+                                    <img src="${imgUrl}" alt="${caption}">
                                 </div>
-                                ${eventName ? `<p>${eventName}</p>` : ''}
+                                ${caption ? `<p>${caption}</p>` : ''}
                             </div>
                         `;
                     }
                 });
-
-                galContainer.innerHTML = galHTML || '<p>No gallery images uploaded yet.</p>';
-            } else {
-                galContainer.innerHTML = '<p>No gallery images uploaded yet.</p>';
+                galDiv.innerHTML = html || '<p>No gallery images found.</p>';
             }
-        
+
+            // 10. Fetch Blogs
+            await loadBlogsData();
         }
 
-        loadPortfolio();
-        loadBlogsData();
+        document.addEventListener('DOMContentLoaded', loadPortfolioData);
     </script>
 </body>
 </html>
