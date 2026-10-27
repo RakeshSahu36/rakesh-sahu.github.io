@@ -274,7 +274,7 @@
             font-size: 0.95rem;
         }
 
-        /* Software & Internship Logo Grid Cards */
+        /* Software, Experience & Internship Logo Grid Cards */
         .grid-card-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -749,6 +749,9 @@
             <h3 class="sub-heading"><i class="fas fa-graduation-cap"></i> Education</h3>
             <div id="education-content" class="education-container">Loading education details...</div>
 
+            <h3 class="sub-heading"><i class="fas fa-user-tie"></i> Experience</h3>
+            <div id="experience-content">Loading experience details...</div>
+
             <h3 class="sub-heading"><i class="fas fa-briefcase"></i> Internships</h3>
             <div id="internships-content">Loading internship details...</div>
 
@@ -799,7 +802,6 @@
         </section>
 
         <!-- 6. ACTIVITIES TAB -->
-                <!-- 6. ACTIVITIES TAB -->
         <section id="activities" class="tab-content section-card">
             <h2>Activities & Creative Pursuits</h2>
             <div id="activities-dynamic-container">Loading activities details...</div>
@@ -1082,7 +1084,7 @@
                 document.getElementById('ftr-contact').innerHTML = `Contact: ${currentEmail} | +91-${currentMobile}`;
             }
 
-            // 2. BIO-SKETCH (EDUCATION, INTERNSHIPS, WORKSHOPS, WEBINARS)
+            // 2. BIO-SKETCH (EDUCATION, EXPERIENCE, INTERNSHIPS, WORKSHOPS, WEBINARS)
             const eduRows = await fetchTabData('Education');
             if (eduRows.length > 0) {
                 let eduHTML = '';
@@ -1121,6 +1123,52 @@
                     }
                 });
                 document.getElementById('education-content').innerHTML = eduHTML;
+            }
+
+            // EXPERIENCE DATA PARSER
+            const expRows = await fetchTabData('Experience');
+            const expDiv = document.getElementById('experience-content');
+            if (expRows.length > 0) {
+                let expHTML = '<div class="grid-card-container">';
+                expRows.forEach((row, idx) => {
+                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('role')) return;
+
+                    const role = (row[0] || '').trim();
+                    const org = (row[1] || '').trim();
+                    const duration = (row[2] || '').trim();
+                    const title = (row[3] || '').trim();
+
+                    // Search for logo URL across remaining columns
+                    let logoUrl = '';
+                    for (let c = 3; c < row.length; c++) {
+                        const cellVal = (row[c] || '').trim();
+                        if (cellVal.startsWith('http')) {
+                            logoUrl = formatImageUrl(cellVal);
+                            break;
+                        }
+                    }
+
+                    if (role || org) {
+                        const logoTag = logoUrl 
+                            ? `<img src="${logoUrl}" class="item-logo" alt="${org}">` 
+                            : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-user-tie"></i></div>`;
+
+                        expHTML += `
+                            <div class="item-card">
+                                ${logoTag}
+                                <div class="item-info">
+                                    <h3>${role}</h3>
+                                    <p><strong>${org}</strong> ${duration ? '• (' + duration + ')' : ''}</p>
+                                    ${title ? `<p style="font-size:0.85rem; color:#475569; margin-top:4px;">${title}</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                expHTML += '</div>';
+                expDiv.innerHTML = expHTML;
+            } else {
+                expDiv.innerHTML = '<p style="color:#64748b;">No experience records listed.</p>';
             }
 
             const intRows = await fetchTabData('Internships');
@@ -1386,7 +1434,7 @@
                 profContainer.innerHTML = '<h2>Professional Contributions</h2><p>No professional contributions listed yet.</p>';
             }
 
-        // 6. ACTIVITIES & HOBBIES (DYNAMIC CATEGORY PARSER)
+            // 6. ACTIVITIES & HOBBIES (DYNAMIC CATEGORY PARSER)
             const hobbyRows = await fetchTabData('Activities & Hobbies');
             const container = document.getElementById('activities-dynamic-container');
 
@@ -1485,7 +1533,7 @@
                 container.innerHTML = '<p>No activities listed yet.</p>';
             }
 
-                        // 7. GALLERY (EXACT SHEET SEQUENCE - NO CATEGORIES)
+            // 7. GALLERY (EXACT SHEET SEQUENCE - NO CATEGORIES)
             const galRows = await fetchTabData('Gallery');
             const galContainer = document.getElementById('gallery-content');
             
