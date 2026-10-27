@@ -1442,28 +1442,49 @@
                 container.innerHTML = '<p>No activities listed yet.</p>';
             }
 
-            // 7. GALLERY (RESEARCH GROUPS)
+                        // 7. GALLERY (EXACT SHEET SEQUENCE - NO CATEGORIES)
             const galRows = await fetchTabData('Gallery');
+            const galContainer = document.getElementById('gallery-content');
+            
             if (galRows.length > 0) {
-                let galHTML = '<div class="gallery-grid">';
+                let galHTML = '';
                 galRows.forEach((row, idx) => {
-                    if (idx === 0 && row[0] && row[0].toLowerCase().includes('event')) return;
-                    const eventName = row[0] || '';
-                    const rawUrl = row[1] || '';
-                    const imgUrl = formatImageUrl(rawUrl);
+                    if (idx === 0 && row[0] && (row[0].toLowerCase().includes('event') || row[0].toLowerCase().includes('title') || row[0].toLowerCase().includes('category'))) return;
+                    
+                    let eventName = (row[0] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    
+                    // Search all columns for the image URL
+                    let imgUrl = '';
+                    for (let c = 0; c < row.length; c++) {
+                        const cellVal = (row[c] || '').trim();
+                        if (cellVal.startsWith('http')) {
+                            imgUrl = formatImageUrl(cellVal);
+                            break;
+                        }
+                    }
+
+                    // If first column was the link, clear eventName
+                    if (row[0] && row[0].trim().startsWith('http')) {
+                        eventName = '';
+                    }
+
                     if (imgUrl) {
                         galHTML += `
                             <div class="gallery-card">
                                 <div class="gallery-card-img-wrapper">
-                                    <img src="${imgUrl}" alt="${eventName}" onerror="this.src='https://via.placeholder.com/220x160?text=Research+Group+Photo'">
+                                    <img src="${imgUrl}" alt="${eventName || 'Gallery Image'}" onerror="this.src='https://via.placeholder.com/380x280?text=Gallery+Photo'">
                                 </div>
                                 ${eventName ? `<p>${eventName}</p>` : ''}
                             </div>
                         `;
                     }
                 });
-                document.getElementById('gallery-content').innerHTML = galHTML + '</div>';
+
+                galContainer.innerHTML = galHTML || '<p>No gallery images uploaded yet.</p>';
+            } else {
+                galContainer.innerHTML = '<p>No gallery images uploaded yet.</p>';
             }
+        
         }
 
         loadPortfolio();
