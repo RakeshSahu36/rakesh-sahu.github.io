@@ -770,23 +770,10 @@
         </section>
 
         <!-- 6. ACTIVITIES TAB -->
+                <!-- 6. ACTIVITIES TAB -->
         <section id="activities" class="tab-content section-card">
-            <h2>Activities</h2>
-            
-            <h3 class="sub-heading"><i class="fas fa-hands-helping"></i> Volunteer</h3>
-            <div id="volunteer-content">Loading volunteer details...</div>
-
-            <h3 class="sub-heading"><i class="fas fa-heart"></i> Hobbies</h3>
-            <div id="hobbies-general-content">Loading hobbies details...</div>
-
-            <div class="art-subheading"><i class="fas fa-paint-brush"></i> Watercolor Painting</div>
-            <div id="art-watercolor-content" class="gallery-grid">Loading watercolor artwork...</div>
-
-            <div class="art-subheading"><i class="fas fa-pencil-alt"></i> Pencil Sketch</div>
-            <div id="art-pencil-content" class="gallery-grid">Loading pencil sketches...</div>
-
-            <div class="art-subheading"><i class="fas fa-fill-drip"></i> Acrylic Painting</div>
-            <div id="art-acrylic-content" class="gallery-grid">Loading acrylic artwork...</div>
+            <h2>Activities & Creative Pursuits</h2>
+            <div id="activities-dynamic-container">Loading activities details...</div>
         </section>
 
         <!-- 7. GALLERY TAB -->
@@ -1333,64 +1320,101 @@
                 document.getElementById('reviewer-content').innerHTML = hasRev ? revHTML + '</ul>' : '<p>No reviewer panel memberships listed yet.</p>';
             }
 
-            // 6. ACTIVITIES & HOBBIES (PARSE ARTWORK IMAGES CORRECTLY)
+                        // 6. ACTIVITIES & HOBBIES (DYNAMIC CATEGORY PARSER)
             const hobbyRows = await fetchTabData('Activities & Hobbies');
+            const container = document.getElementById('activities-dynamic-container');
+
             if (hobbyRows.length > 0) {
-                let volHTML = '<ul>';
-                let hobbyGenHTML = '<ul>';
-                let wcHTML = '', pencilHTML = '', acrylicHTML = '';
-                let hasVol = false, hasHobby = false, hasWC = false, hasPencil = false, hasAcrylic = false;
+                // Map to preserve original category order and items
+                const categoryMap = new Map();
 
                 hobbyRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
+                    
                     const cat = (row[0] || '').trim();
+                    if (!cat) return;
+
                     const title = (row[1] || '').trim();
                     const desc = (row[2] || '').trim();
-                    
-                    // Check column 4 or column 3 for Image URL
-                    let rawImg = row[3] || row[2] || '';
-                    let imgUrl = formatImageUrl(rawImg);
 
-                    if (!title && !cat) return;
-
-                    const catLower = cat.toLowerCase();
-                    const titleLower = title.toLowerCase();
-
-                    // Check if it is an artwork card with image
-                    const isArt = catLower.includes('water') || catLower.includes('pencil') || catLower.includes('sketch') || catLower.includes('acrylic') || titleLower.includes('water') || titleLower.includes('sketch') || titleLower.includes('acrylic');
-
-                    if (isArt || imgUrl.startsWith('http')) {
-                        const artCard = `
-                            <div class="gallery-card">
-                                ${imgUrl ? `<img src="${imgUrl}" alt="${title}" onerror="this.src='https://via.placeholder.com/220x160?text=Artwork'">` : ''}
-                                <p><strong>${title || 'Artwork'}</strong>${desc && !desc.startsWith('http') ? `<br><small>${desc}</small>` : ''}</p>
-                            </div>
-                        `;
-
-                        if (catLower.includes('water') || titleLower.includes('water')) {
-                            wcHTML += artCard;
-                            hasWC = true;
-                        } else if (catLower.includes('pencil') || catLower.includes('sketch') || titleLower.includes('pencil') || titleLower.includes('sketch')) {
-                            pencilHTML += artCard;
-                            hasPencil = true;
-                        } else if (catLower.includes('acrylic') || titleLower.includes('acrylic')) {
-                            acrylicHTML += artCard;
-                            hasAcrylic = true;
+                    // Find image URL across all columns in case title/desc are empty
+                    let imgUrl = '';
+                    for (let c = 1; c < row.length; c++) {
+                        const cellVal = (row[c] || '').trim();
+                        if (cellVal.startsWith('http')) {
+                            imgUrl = formatImageUrl(cellVal);
+                            break;
                         }
-                    } else if (catLower.includes('volunteer')) {
-                        volHTML += `<li><strong>${title}</strong><br>${desc}</li>`;
-                        hasVol = true;
-                    } else if (title && !title.startsWith('http')) {
-                        hobbyGenHTML += `<li><strong>${title}</strong><br>${desc}</li>`;
-                        hasHobby = true;
                     }
+
+                    if (!categoryMap.has(cat)) {
+                        categoryMap.set(cat, []);
+                    }
+
+                    categoryMap.get(cat).push({ title, desc, imgUrl });
                 });
 
-                document.getElementById('volunteer-content').innerHTML = hasVol ? volHTML + '</ul>' : '<p>No volunteer activities listed yet.</p>';
-                document.getElementById('hobbies-general-content').innerHTML = hasHobby ? hobbyGenHTML + '</ul>' : '<p>No general hobbies listed yet.</p>';
-                document.getElementById('art-watercolor-content').innerHTML = hasWC ? wcHTML : '<p>No watercolor artwork listed yet.</p>';
-                document.getElementById('art-pencil-content').innerHTML = hasPencil ? pencilHTML : '<p>No pencil sketches listed yet.</p>';
-                document.getElementById('art-acrylic-content').innerHTML = hasAcrylic ? acrylicHTML : '<p>No acrylic artwork listed yet.</p>';
+                if (categoryMap.size > 0) {
+                    let fullHTML = '';
+
+                    categoryMap.forEach((items, categoryName) => {
+                        const catLower = categoryName.toLowerCase();
+
+                        // Check if this category contains images (Artwork / Photography / Exhibition)
+                        const hasImages = items.some(item => item.imgUrl.length > 0);
+
+                        if (hasImages) {
+                            // Render as Image Gallery Grid
+                            let iconClass = 'fa-palette';
+                            if (catLower.includes('sketch') || catLower.includes('pencil')) iconClass = 'fa-pencil-alt';
+                            else if (catLower.includes('water')) iconClass = 'fa-paint-brush';
+                            else if (catLower.includes('acrylic')) iconClass = 'fa-fill-drip';
+                            else if (catLower.includes('digital')) iconClass = 'fa-laptop-house';
+                            else if (catLower.includes('outdoor') || catLower.includes('exhibition')) iconClass = 'fa-camera';
+                            else if (catLower.includes('poetry')) iconClass = 'fa-feather-alt';
+
+                            fullHTML += `
+                                <div class="art-subheading"><i class="fas ${iconClass}"></i> ${categoryName}</div>
+                                <div class="gallery-grid">
+                            `;
+
+                            items.forEach((item, index) => {
+                                fullHTML += `
+                                    <div class="gallery-card">
+                                        <img src="${item.imgUrl}" alt="${item.title || categoryName + ' ' + (index + 1)}" onerror="this.src='https://via.placeholder.com/380x280?text=${encodeURIComponent(categoryName)}'">
+                                        ${(item.title || item.desc) ? `<p><strong>${item.title}</strong>${item.desc ? `<br><small>${item.desc}</small>` : ''}</p>` : ''}
+                                    </div>
+                                `;
+                            });
+
+                            fullHTML += `</div>`;
+                        } else {
+                            // Render as Bullet List (Volunteering, Hobbies, Reading, etc.)
+                            let iconClass = 'fa-heart';
+                            if (catLower.includes('volunteer')) iconClass = 'fa-hands-helping';
+                            else if (catLower.includes('hobby') || catLower.includes('interest')) iconClass = 'fa-star';
+
+                            fullHTML += `
+                                <h3 class="sub-heading"><i class="fas ${iconClass}"></i> ${categoryName}</h3>
+                                <ul>
+                            `;
+
+                            items.forEach(item => {
+                                if (item.title || item.desc) {
+                                    fullHTML += `<li><strong>${item.title || categoryName}</strong>${item.desc ? `<br>${item.desc}` : ''}</li>`;
+                                }
+                            });
+
+                            fullHTML += `</ul>`;
+                        }
+                    });
+
+                    container.innerHTML = fullHTML;
+                } else {
+                    container.innerHTML = '<p>No activities listed yet.</p>';
+                }
+            } else {
+                container.innerHTML = '<p>No activities listed yet.</p>';
             }
 
             // 7. GALLERY (RESEARCH GROUPS)
