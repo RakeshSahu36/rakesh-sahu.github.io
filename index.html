@@ -1,4 +1,112 @@
-// 2. Bio-Sketch: Education
+Array.from(topicsSet).forEach(t => {
+                        if (t !== 'All') {
+                            dropdownHTML += `<a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('${t.replace(/'/g, "\\'")}'); return false;"><i class="fas fa-bookmark"></i> ${t}</a>`;
+                            tagsHTML += `<button class="blog-tag-btn" onclick="filterBlogTopic('${t.replace(/'/g, "\\'")}');">${t}</button>`;
+                        }
+                    });
+                    document.getElementById('blog-dropdown-topics').innerHTML = dropdownHTML;
+                    document.getElementById('blog-tags-container').innerHTML = tagsHTML;
+                }
+
+                renderBlogPosts('All');
+            } else {
+                blogGrid.innerHTML = '<p>No blog posts found.</p>';
+            }
+        }
+
+        function filterBlogTopic(selectedTopic) {
+            const buttons = document.querySelectorAll('.blog-tag-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim().toLowerCase() === selectedTopic.trim().toLowerCase()) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            renderBlogPosts(selectedTopic);
+        }
+
+        function renderBlogPosts(filterTopic) {
+            const blogGrid = document.getElementById('blog-content-grid');
+            const filtered = (filterTopic === 'All') 
+                ? allBlogPosts 
+                : allBlogPosts.filter(post => post.topic.toLowerCase() === filterTopic.toLowerCase());
+
+            if (filtered.length === 0) {
+                blogGrid.innerHTML = `<p style="grid-column: 1/-1; color: #64748b;">No articles published under "${filterTopic}" yet.</p>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(post => {
+                const imgTag = post.imgUrl ? `<img src="${post.imgUrl}" alt="${post.title}">` : `<div style="height:140px; background:#e2e8f0; display:flex; align-items:center; justify-content:center; color:#94a3b8;"><i class="fas fa-file-alt fa-2x"></i></div>`;
+                const linkBtn = post.linkUrl ? `<a href="${post.linkUrl}" target="_blank" class="blog-card-link">Read Article <i class="fas fa-arrow-right"></i></a>` : '';
+                const dateBadge = post.dateStr ? `<span class="blog-card-date"><i class="far fa-calendar-alt"></i> ${post.dateStr}</span>` : '<span></span>';
+
+                html += `
+                    <div class="blog-card">
+                        ${imgTag}
+                        <div class="blog-card-body">
+                            <span class="blog-category-badge">${post.topic}</span>
+                            <h3 class="blog-card-title">${post.title}</h3>
+                            <p class="blog-card-desc">${post.desc}</p>
+                            <div class="blog-card-footer">
+                                ${dateBadge}
+                                ${linkBtn}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            blogGrid.innerHTML = html;
+        }
+
+        async function loadPortfolioData() {
+            // 1. Home Bio & Social Links
+            const bioRows = await fetchTabData('Bio');
+            const bioDiv = document.getElementById('bio-content');
+            if (bioRows.length > 0) {
+                let html = '';
+                bioRows.forEach(row => {
+                    let val = (row[0] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    if (val) {
+                        if (val.startsWith('http://') || val.startsWith('https://')) {
+                            document.getElementById('profile-pic').src = formatImageUrl(val);
+                        } else {
+                            html += `<p>${val}</p>`;
+                        }
+                    }
+                });
+                bioDiv.innerHTML = html;
+            }
+
+            const socialRows = await fetchTabData('Social');
+            if (socialRows.length > 0) {
+                socialRows.forEach(row => {
+                    const platform = (row[0] || '').toLowerCase().trim();
+                    const url = (row[1] || '').trim();
+                    if (platform && url) {
+                        if (platform.includes('linkedin')) {
+                            document.getElementById('hdr-linkedin').href = url;
+                            document.getElementById('btn-linkedin').href = url;
+                        } else if (platform.includes('researchgate')) {
+                            document.getElementById('hdr-researchgate').href = url;
+                            document.getElementById('btn-researchgate').href = url;
+                        } else if (platform.includes('orcid')) {
+                            document.getElementById('hdr-orcid').href = url;
+                            document.getElementById('btn-orcid').href = url;
+                        } else if (platform.includes('scholar')) {
+                            document.getElementById('hdr-scholar').href = url;
+                            document.getElementById('btn-scholar').href = url;
+                        } else if (platform.includes('scopus')) {
+                            document.getElementById('hdr-scopus').href = url;
+                            document.getElementById('btn-scopus').href = url;
+                        }
+                    }
+                });
+            }
+
+            // 2. Bio-Sketch: Education
             const eduRows = await fetchTabData('Education');
             const eduDiv = document.getElementById('education-content');
             if (eduRows.length > 0) {
@@ -27,24 +135,24 @@
                 eduDiv.innerHTML = html || '<p>No education details listed.</p>';
             }
 
-            // 2b. Bio-Sketch: Experience
-            const expRows = await fetchTabData('Experience');
-            const expDiv = document.getElementById('experience-content');
-            if (expRows.length > 0) {
+            // 3. Bio-Sketch: Internships & Positions
+            const internRows = await fetchTabData('Internships');
+            const internDiv = document.getElementById('internships-content');
+            if (internRows.length > 0) {
                 let html = '<div class="grid-card-container">';
-                expRows.forEach(row => {
-                    const role = (row[0] || '').trim();
-                    const org = (row[1] || '').trim();
+                internRows.forEach(row => {
+                    const org = (row[0] || '').trim();
+                    const role = (row[1] || '').trim();
                     const duration = (row[2] || '').trim();
                     const logoUrl = formatImageUrl(row[3] || '');
 
-                    if (role || org) {
-                        const logoTag = logoUrl ? `<img src="${logoUrl}" class="item-logo" alt="${org}">` : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-user-tie"></i></div>`;
+                    if (org || role) {
+                        const logoTag = logoUrl ? `<img src="${logoUrl}" class="item-logo" alt="${org}">` : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-briefcase"></i></div>`;
                         html += `
                             <div class="item-card">
                                 ${logoTag}
                                 <div class="item-info">
-                                    <h3>${role}</h3>
+                                    <h3>${role || org}</h3>
                                     <p><strong>${org}</strong></p>
                                     ${duration ? `<p style="font-size:0.8rem; color:#64748b;">${duration}</p>` : ''}
                                 </div>
@@ -53,7 +161,266 @@
                     }
                 });
                 html += '</div>';
-                expDiv.innerHTML = html;
-            } else {
-                expDiv.innerHTML = '<p style="color:#64748b;">No experience records listed.</p>';
+                internDiv.innerHTML = html;
             }
+
+            // 4. Bio-Sketch: Workshops & Webinars
+            const workshopRows = await fetchTabData('Workshops');
+            const workshopDiv = document.getElementById('workshops-list-content');
+            if (workshopRows.length > 0) {
+                let html = '<ul>';
+                workshopRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const org = (row[1] || '').trim();
+                    const date = (row[2] || '').trim();
+                    if (title) {
+                        html += `<li><strong>${title}</strong> ${org ? '— ' + org : ''} ${date ? '(' + date + ')' : ''}</li>`;
+                    }
+                });
+                html += '</ul>';
+                workshopDiv.innerHTML = html;
+            }
+
+            const webinarRows = await fetchTabData('Webinars');
+            const webinarDiv = document.getElementById('webinars-list-content');
+            if (webinarRows.length > 0) {
+                let html = '<ul>';
+                webinarRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const org = (row[1] || '').trim();
+                    const date = (row[2] || '').trim();
+                    if (title) {
+                        html += `<li><strong>${title}</strong> ${org ? '— ' + org : ''} ${date ? '(' + date + ')' : ''}</li>`;
+                    }
+                });
+                html += '</ul>';
+                webinarDiv.innerHTML = html;
+            }
+
+            // 5. Research: Areas of Research, Software & Highlights
+            const researchRows = await fetchTabData('Research');
+            const researchDiv = document.getElementById('research-content');
+            if (researchRows.length > 0) {
+                let html = '<div class="research-grid">';
+                researchRows.forEach(row => {
+                    const area = (row[0] || '').trim();
+                    const desc = (row[1] || '').trim();
+                    if (area) {
+                        html += `
+                            <div class="research-card-box">
+                                <h3>${area}</h3>
+                                <p style="font-size:0.92rem; color:#475569;">${desc}</p>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+                researchDiv.innerHTML = html;
+            }
+
+            const softRows = await fetchTabData('Software');
+            const softDiv = document.getElementById('software-content');
+            if (softRows.length > 0) {
+                let html = '<div class="grid-card-container">';
+                softRows.forEach(row => {
+                    const tool = (row[0] || '').trim();
+                    const desc = (row[1] || '').trim();
+                    const logoUrl = formatImageUrl(row[2] || '');
+
+                    if (tool) {
+                        const logoTag = logoUrl ? `<img src="${logoUrl}" class="item-logo" alt="${tool}">` : `<div class="item-logo" style="display:flex;align-items:center;justify-content:center;color:#94a3b8;"><i class="fas fa-code"></i></div>`;
+                        html += `
+                            <div class="item-card">
+                                ${logoTag}
+                                <div class="item-info">
+                                    <h3>${tool}</h3>
+                                    <p>${desc}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+                softDiv.innerHTML = html;
+            }
+
+            const highlightRows = await fetchTabData('Highlights');
+            const highlightDiv = document.getElementById('highlights-content');
+            if (highlightRows.length > 0) {
+                let html = '';
+                highlightRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const desc = (row[1] || '').trim();
+                    const imgUrl = formatImageUrl(row[2] || '');
+
+                    if (title) {
+                        const imgTag = imgUrl ? `<img src="${imgUrl}" alt="${title}">` : '';
+                        html += `
+                            <div class="highlight-card">
+                                ${imgTag}
+                                <div class="highlight-card-body">
+                                    <h4>${title}</h4>
+                                    <p>${desc}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                highlightDiv.innerHTML = html;
+            }
+
+            // 6. Publications: Journals, Conferences & Books
+            const journalRows = await fetchTabData('Journals');
+            const journalDiv = document.getElementById('journals-content');
+            if (journalRows.length > 0) {
+                let html = '<ul class="pub-list">';
+                journalRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const authors = (row[1] || '').trim();
+                    const journal = (row[2] || '').trim();
+                    const doiLink = formatDoiUrl(row[3] || '');
+
+                    if (title) {
+                        html += `
+                            <li class="pub-item">
+                                <div><span class="pub-badge">Journal</span> <span class="pub-title">${title}</span></div>
+                                <div class="pub-authors">${authors}</div>
+                                <div style="font-size:0.9rem; color:#475569;"><em>${journal}</em></div>
+                                ${doiLink ? `<div class="pub-doi"><a href="${doiLink}" target="_blank"><i class="fas fa-external-link-alt"></i> DOI Link</a></div>` : ''}
+                            </li>
+                        `;
+                    }
+                });
+                html += '</ul>';
+                journalDiv.innerHTML = html;
+            }
+
+            const confRows = await fetchTabData('Conferences');
+            const confDiv = document.getElementById('conferences-content');
+            if (confRows.length > 0) {
+                let html = '<ul class="pub-list">';
+                confRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const authors = (row[1] || '').trim();
+                    const conf = (row[2] || '').trim();
+                    const doiLink = formatDoiUrl(row[3] || '');
+
+                    if (title) {
+                        html += `
+                            <li class="pub-item">
+                                <div><span class="pub-badge" style="background:#fef3c7; color:#b45309;">Conference</span> <span class="pub-title">${title}</span></div>
+                                <div class="pub-authors">${authors}</div>
+                                <div style="font-size:0.9rem; color:#475569;"><em>${conf}</em></div>
+                                ${doiLink ? `<div class="pub-doi"><a href="${doiLink}" target="_blank"><i class="fas fa-external-link-alt"></i> Link / DOI</a></div>` : ''}
+                            </li>
+                        `;
+                    }
+                });
+                html += '</ul>';
+                confDiv.innerHTML = html;
+            }
+
+            const bookRows = await fetchTabData('BookChapters');
+            const bookDiv = document.getElementById('book-chapters-content');
+            if (bookRows.length > 0) {
+                let html = '<ul class="pub-list">';
+                bookRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const authors = (row[1] || '').trim();
+                    const book = (row[2] || '').trim();
+                    const doiLink = formatDoiUrl(row[3] || '');
+
+                    if (title) {
+                        html += `
+                            <li class="pub-item">
+                                <div><span class="pub-badge" style="background:#dcfce7; color:#15803d;">Chapter</span> <span class="pub-title">${title}</span></div>
+                                <div class="pub-authors">${authors}</div>
+                                <div style="font-size:0.9rem; color:#475569;"><em>${book}</em></div>
+                                ${doiLink ? `<div class="pub-doi"><a href="${doiLink}" target="_blank"><i class="fas fa-external-link-alt"></i> DOI Link</a></div>` : ''}
+                            </li>
+                        `;
+                    }
+                });
+                html += '</ul>';
+                bookDiv.innerHTML = html;
+            }
+
+            // 7. Professional Contributions
+            const profRows = await fetchTabData('ProfessionalContributions');
+            const taDiv = document.getElementById('ta-content');
+            const revDiv = document.getElementById('reviewer-content');
+
+            if (profRows.length > 0) {
+                let taHtml = '<ul>';
+                let revHtml = '<ul>';
+                let hasTa = false, hasRev = false;
+
+                profRows.forEach(row => {
+                    const category = (row[0] || '').toLowerCase().trim();
+                    const item = (row[1] || '').trim();
+
+                    if (item) {
+                        if (category.includes('teaching') || category.includes('ta')) {
+                            taHtml += `<li>${item}</li>`;
+                            hasTa = true;
+                        } else {
+                            revHtml += `<li>${item}</li>`;
+                            hasRev = true;
+                        }
+                    }
+                });
+
+                taHtml += '</ul>';
+                revHtml += '</ul>';
+
+                taDiv.innerHTML = hasTa ? taHtml : '<p>No teaching assistantship records found.</p>';
+                revDiv.innerHTML = hasRev ? revHtml : '<p>No reviewer panel records found.</p>';
+            }
+
+            // 8. Activities Tab
+            const actRows = await fetchTabData('Activities');
+            const actContainer = document.getElementById('activities-dynamic-container');
+            if (actRows.length > 0) {
+                let html = '<ul>';
+                actRows.forEach(row => {
+                    const title = (row[0] || '').trim();
+                    const desc = (row[1] || '').trim();
+                    if (title) {
+                        html += `<li><strong>${title}</strong> ${desc ? ': ' + desc : ''}</li>`;
+                    }
+                });
+                html += '</ul>';
+                actContainer.innerHTML = html;
+            }
+
+            // 9. Gallery Tab
+            const galRows = await fetchTabData('Gallery');
+            const galDiv = document.getElementById('gallery-content');
+            if (galRows.length > 0) {
+                let html = '';
+                galRows.forEach(row => {
+                    const caption = (row[0] || '').trim();
+                    const imgUrl = formatImageUrl(row[1] || '');
+
+                    if (imgUrl) {
+                        html += `
+                            <div class="gallery-card">
+                                <div class="gallery-card-img-wrapper">
+                                    <img src="${imgUrl}" alt="${caption}">
+                                </div>
+                                ${caption ? `<p>${caption}</p>` : ''}
+                            </div>
+                        `;
+                    }
+                });
+                galDiv.innerHTML = html || '<p>No gallery images found.</p>';
+            }
+
+            // 10. Fetch Blogs
+            await loadBlogsData();
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPortfolioData);
+    </script>
+</body>
+</html>
