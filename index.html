@@ -921,7 +921,11 @@
                 blogRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('topic')) return;
                     
-                    const topic = (row[0] || 'General').trim();
+                    const topic = (row[0] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    if (topic) {
+                        topicsSet.add(topic);
+                    }
+
                     let title = (row[1] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
                     let desc = (row[2] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
                     const rawImg = row[3] || '';
@@ -929,14 +933,12 @@
                     const linkUrl = (row[4] || '').trim();
                     const dateStr = (row[5] || '').trim();
 
-                    if (!title) return;
-
-                    topicsSet.add(topic);
-                    allBlogPosts.push({ topic, title, desc, imgUrl, linkUrl, dateStr });
+                    if (title && topic) {
+                        allBlogPosts.push({ topic, title, desc, imgUrl, linkUrl, dateStr });
+                    }
                 });
 
-                // Update dropdown menu dynamically if topics exist in Google Sheet
-                if (allBlogPosts.length > 0) {
+                if (topicsSet.size > 1) {
                     let dropdownHTML = `<a href="#" onclick="openTab('blogs', document.getElementById('blog-tab-btn')); filterBlogTopic('All'); return false;"><i class="fas fa-layer-group"></i> All Topics</a>`;
                     let tagsHTML = `<button class="blog-tag-btn active" onclick="filterBlogTopic('All')">All Topics</button>`;
                     
@@ -1317,38 +1319,73 @@
                 document.getElementById('book-chapters-content').innerHTML = hasB ? bookHTML + '</ul>' : '<p>No book chapters listed yet.</p>';
             }
 
-            // 5. PROFESSIONAL CONTRIBUTIONS (TEACHING ASSISTANTSHIP, REVIEWER PANEL)
+            // 5. PROFESSIONAL CONTRIBUTIONS (DYNAMIC CATEGORY PARSER)
             const teachRows = await fetchTabData('Teaching & Service');
+            const profContainer = document.getElementById('professional');
+
             if (teachRows.length > 0) {
-                let taHTML = '<ul>';
-                let revHTML = '<ul>';
-                let hasTA = false, hasRev = false;
+                const categoryMap = new Map();
 
                 teachRows.forEach((row, idx) => {
                     if (idx === 0 && row[0] && row[0].toLowerCase().includes('category')) return;
-                    const cat = (row[0] || '').trim();
-                    const role = row[1] || '';
-                    const inst = row[2] || '';
-                    const details = row[3] || '';
+                    
+                    const cat = (row[0] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    if (!cat) return;
 
-                    if (!role) return;
+                    let role = (row[1] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    let inst = (row[2] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
+                    let details = (row[3] || '').trim().replace(/^["'\s.]+|["'\s.]+$|^"|"$|^'|'$/g, '');
 
-                    const item = `<li><strong>${role}</strong> - ${inst} <br><small>${details}</small></li>`;
+                    if (!categoryMap.has(cat)) {
+                        categoryMap.set(cat, []);
+                    }
 
-                    if (cat.toLowerCase().includes('reviewer') || cat.toLowerCase().includes('editor') || role.toLowerCase().includes('reviewer')) {
-                        revHTML += item;
-                        hasRev = true;
-                    } else {
-                        taHTML += item;
-                        hasTA = true;
+                    if (role || inst || details) {
+                        categoryMap.get(cat).push({ role, inst, details });
                     }
                 });
 
-                document.getElementById('ta-content').innerHTML = hasTA ? taHTML + '</ul>' : '<p>No teaching assistantship listed yet.</p>';
-                document.getElementById('reviewer-content').innerHTML = hasRev ? revHTML + '</ul>' : '<p>No reviewer panel memberships listed yet.</p>';
+                if (categoryMap.size > 0) {
+                    let fullHTML = '<h2>Professional Contributions</h2>';
+
+                    categoryMap.forEach((items, categoryName) => {
+                        let iconClass = 'fa-briefcase';
+                        const catLower = categoryName.toLowerCase();
+                        if (catLower.includes('teach') || catLower.includes('assistant')) iconClass = 'fa-user-graduate';
+                        else if (catLower.includes('review') || catLower.includes('journal')) iconClass = 'fa-pen-nib';
+                        else if (catLower.includes('conference') || catLower.includes('symposium') || catLower.includes('service')) iconClass = 'fa-users';
+                        else if (catLower.includes('academic') || catLower.includes('lab')) iconClass = 'fa-university';
+
+                        fullHTML += `<h3 class="sub-heading"><i class="fas ${iconClass}"></i> ${categoryName}</h3>`;
+
+                        if (items.length > 0) {
+                            fullHTML += `<div class="prof-card-grid">`;
+                            items.forEach(item => {
+                                fullHTML += `
+                                    <div class="prof-card">
+                                        <div class="prof-card-header">
+                                            <h4 class="prof-card-title">${item.role || item.inst || categoryName}</h4>
+                                            ${item.details ? `<span class="prof-card-period">${item.details}</span>` : ''}
+                                        </div>
+                                        ${item.inst && item.role ? `<div class="prof-card-inst"><i class="fas fa-university"></i> ${item.inst}</div>` : ''}
+                                    </div>
+                                `;
+                            });
+                            fullHTML += `</div>`;
+                        } else {
+                            fullHTML += `<p style="color:#64748b; font-size:0.9rem;">No details added yet for this category in Google Sheet.</p>`;
+                        }
+                    });
+
+                    profContainer.innerHTML = fullHTML;
+                } else {
+                    profContainer.innerHTML = '<h2>Professional Contributions</h2><p>No professional contributions listed yet.</p>';
+                }
+            } else {
+                profContainer.innerHTML = '<h2>Professional Contributions</h2><p>No professional contributions listed yet.</p>';
             }
 
-                        // 6. ACTIVITIES & HOBBIES (DYNAMIC CATEGORY PARSER)
+        // 6. ACTIVITIES & HOBBIES (DYNAMIC CATEGORY PARSER)
             const hobbyRows = await fetchTabData('Activities & Hobbies');
             const container = document.getElementById('activities-dynamic-container');
 
